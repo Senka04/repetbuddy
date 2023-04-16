@@ -5,19 +5,27 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+        integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+        async></script>
+
+
+
+
+
+
+
 <div class="container">
-    <div class="row align-items-start">
-        <div class="col">
-            <div class="card border-success mb-3" style="max-width: 18rem;">
+    <div class="row" data-masonry='{"percentPosition": true }'>
+        <div class="col-sm-6 col-lg-4 mb-4">
+            <div class="post-masonry card border-success mb-3" style="max-width: 18rem;">
                 <div class="card-body">
-                    <h1 class="card-title">9 класс</h1>
-                    <p class="card-text">ОГЭ Математика</p>
-                    <p class="card-text">ОГЭ Физика</p>
-                    <a href="{% url 'class9' %}" class="btn btn-outline-success">Перейти к курсам</a>
+                    <h1 class="card-title">Видео</h1>
+                    <a href="{% url 'home_video' %}" class="btn btn-outline-success">Перейти к роликам</a>
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-sm-6 col-lg-4 mb-4">
             <div class="card border-success mb-3" style="max-width: 18rem;">
                 <div class="card-body">
                     <h1 class="card-title">10 класс</h1>
@@ -27,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-sm-6 col-lg-4 mb-4">
             <div class="card border-success mb-3" style="max-width: 18rem;">
                 <div class="card-body">
                     <h1 class="card-title">11 класс</h1>
@@ -37,14 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card border-success mb-3" style="max-width: 18rem;">
-                <div class="card-body">
-                    <h1 class="card-title">Видео</h1>
-                    <a href="{% url 'home_video' %}" class="btn btn-outline-success">Перейти к роликам</a>
-                </div>
-            </div>
-        </div>
+
     </div>
 </div>
 {% endblock %}
