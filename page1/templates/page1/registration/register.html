@@ -2,26 +2,26 @@
 {% block title %}Регистрация{% endblock %}
 
 {% block content %}
-<h2>Registration</h2>
+<h2 class="source-sans-pro">Регистрация</h2>
 <form method="post" class="form">
     {% csrf_token %}
     <div class="form-group">
-        <label for="username">Username:</label>
+        <label class="source-sans-pro" for="username">Имя:</label>
         <input type="text" class="form-control" id="username" name="username">
     </div>
     <br>
     <div class="form-group">
-        <label for="email">Email:</label>
+        <label class="source-sans-pro" for="email">Email:</label>
         <input type="email" class="form-control" id="email" name="email">
     </div>
     <br>
     <div class="form-group">
-        <label for="password1">Password:</label>
+        <label class="source-sans-pro" for="password1">Пароль:</label>
         <input type="password" class="form-control" id="password1" name="password1">
     </div>
     <br>
     <div class="form-group">
-        <label for="password2">Confirm Password:</label>
+        <label class="source-sans-pro" for="password2">Подтверждение пароля:</label>
         <input type="password" class="form-control" id="password2" name="password2">
     </div>
     <br>
