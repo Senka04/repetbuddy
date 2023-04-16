@@ -1,7 +1,22 @@
 from django.http import StreamingHttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video
 from .services import open_file
+from .forms import RegistrationForm
+
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = RegistrationForm()
+
+    return render(request, 'page1/registration/register.html', {'form': form})
+
+
+
 
 def index(request):
     return render(request, 'page1/index.html') # представляем, что мы уже в templates
@@ -17,12 +32,12 @@ def class11(request):
     return render(request, 'page1/class11.html')
 # Create your views here.
 def get_list_video(request):
-    return render(request, 'page1/home.html', {'video_list': Video.objects.all()})
+    return render(request, 'page1/videopleer/home.html', {'video_list': Video.objects.all()})
 
 
 def get_video(request, pk: int):
     _video = get_object_or_404(Video, id=pk)
-    return render(request, "page1/video.html", {"video": _video})
+    return render(request, "page1/videopleer/video.html", {"video": _video})
 
 
 def get_streaming_video(request, pk: int):
