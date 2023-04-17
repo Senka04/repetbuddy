@@ -1,0 +1,12 @@
+{% extends 'page1/base.html' %}
+
+{% block content %}
+<div class="container text-center">
+    <h1 class="source-sans-pro">Вы действительно хотите выйти?</h1>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Выйти</button>
+        <a href="{% url 'home' %}" class="btn btn-secondary" type="submit">Отмена</a>
+    </form>
+</div>
+{% endblock %}

@@ -17,6 +17,8 @@
     .source-sans-pro {
         font-family: 'Source Sans Pro', sans-serif;
     }
+
+
     </style>
 
     <!-- Подключение CSS-файла Bootstrap -->
@@ -35,12 +37,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarReg">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link active source-sans-pro" href="{% url 'confirm_logout' %}">Выйти</a>
+                </li>
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link active source-sans-pro" aria-current="page" href="{% url 'register' %}">Регистрация</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link source-sans-pro" href="{% url 'login' %}">Вход</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </div>

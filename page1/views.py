@@ -3,9 +3,23 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video
 from .services import open_file
 from .forms import RegistrationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
+from django.urls import reverse
+
+@login_required
+def confirm_logout(request):
+    return render(request, 'page1/registration/confirm_logout.html')
+
+@login_required
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+    else:
+        return redirect(reverse('confirm_logout'))
 def login_view(request):
     # Проверяем, был ли уже выполнен вход на сайт
     if request.user.is_authenticated:
@@ -27,6 +41,7 @@ def login_view(request):
 
     # Отображаем страницу с формой входа на сайт
     return render(request, 'page1/registration/login.html', {'form': form})
+
 
 def register(request):
     if request.method == 'POST':
