@@ -3,6 +3,30 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video
 from .services import open_file
 from .forms import RegistrationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
+
+def login_view(request):
+    # Проверяем, был ли уже выполнен вход на сайт
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    # Если это POST-запрос, обрабатываем данные формы
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            # Если форма валидна, выполняем вход на сайт
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+    else:
+        form = AuthenticationForm()
+
+    # Отображаем страницу с формой входа на сайт
+    return render(request, 'page1/registration/login.html', {'form': form})
 
 def register(request):
     if request.method == 'POST':
@@ -15,15 +39,9 @@ def register(request):
 
     return render(request, 'page1/registration/register.html', {'form': form})
 
-
-
-
 def index(request):
     return render(request, 'page1/index.html') # представляем, что мы уже в templates
-def registration(request):
-    return render(request, 'page1/registration.html') # представляем, что мы уже в templates
-def login(request):
-    return render(request, 'page1/login.html') # представляем, что мы уже в templates
+
 def class9(request):
     return render(request, 'page1/class9.html')
 def class10(request):

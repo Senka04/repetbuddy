@@ -1,0 +1,27 @@
+{% extends 'page1/base.html' %}
+
+{% block title %}
+Вход
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h2 class="source-sans-pro mb-4">Вход на сайт</h2>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="username" class="source-sans-pro form-label">Имя пользователя</label>
+            <input type="text" class="source-sans-pro form-control" id="username" name="username" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Пароль</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
