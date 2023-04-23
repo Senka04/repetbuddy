@@ -6,8 +6,9 @@ from .forms import RegistrationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-
 from django.urls import reverse
+from django.contrib import messages
+from .forms import VideoForm
 
 @login_required
 def confirm_logout(request):
@@ -64,17 +65,57 @@ def class10(request):
 def class11(request):
     return render(request, 'page1/class11.html')
 # Create your views here.
+
+
+
+@login_required
+def upload_video(request):
+    if request.method == 'POST':
+        form = VideoForm(request.POST, request.FILES)
+        if form.is_valid():
+            video = form.save(commit=False)
+            video.user = request.user
+            video.save()
+            messages.success(request, 'Видео успешно загружено.')
+            return redirect('home')
+    else:
+        form = VideoForm()
+    return render(request, 'page1/videopleer/upload_video.html', {'form': form})
+
+@login_required
+def confirm_delete_video(request, pk):
+    video = get_object_or_404(Video, pk=pk)
+    return render(request, 'page1/videopleer/confirm_delete_video.html', {'video': video})
+@login_required
+def delete_video(request, pk):
+    video = get_object_or_404(Video, pk=pk)
+    if request.user != video.user:
+        messages.error(request, "You don't have permission to delete this video.")
+        return redirect('home')
+    if request.method == 'POST':
+        video.delete()
+        messages.success(request, 'Video has been deleted successfully!')
+        return redirect('home')
+    return render(request, 'delete_video.html', {'video': video})
+
+@login_required
 def get_list_video(request):
-    return render(request, 'page1/videopleer/home.html', {'video_list': Video.objects.all()})
+    video_list = Video.objects.filter(user=request.user)
+    return render(request, 'page1/videopleer/home.html', {'video_list': video_list})
 
 
+@login_required
 def get_video(request, pk: int):
-    _video = get_object_or_404(Video, id=pk)
+    _video = get_object_or_404(Video, id=pk, user=request.user)
     return render(request, "page1/videopleer/video.html", {"video": _video})
 
-
+@login_required
 def get_streaming_video(request, pk: int):
     file, status_code, content_length, content_range = open_file(request, pk)
+
+    # Check if the video belongs to the user
+    video = get_object_or_404(Video, id=pk, user=request.user)
+
     response = StreamingHttpResponse(file, status=status_code, content_type='video/mp4')
 
     response['Accept-Ranges'] = 'bytes'

@@ -1,0 +1,12 @@
+{% extends 'page1/base.html' %}
+
+{% block content %}
+<div class="container text-center">
+  <h1 class="source-sans-pro">Удаляем видео "{{ video.title }}"??</h1>
+  <form action="{% url 'delete_video' video.pk %}" method="POST">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">Удалить</button>
+    <a class="btn btn-secondary" href="{% url 'home' %}">Отменить</a>
+  </form>
+</div>
+{% endblock %}

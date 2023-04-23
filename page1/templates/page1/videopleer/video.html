@@ -15,6 +15,13 @@
                 <span class="date">{{ video.create_at }}</span>
                 <h4><a href="{% url 'video' video.id %}">{{ video.title }}</a></h4>
                 <p>{{ video.description }}</p>
+
+                {% if request.user == video.user %}
+                <form action="{% url 'confirm_delete_video' video.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Удалить видео</button>
+                </form>
+                {% endif %}
             </div>
         </div>
         <div class="row">

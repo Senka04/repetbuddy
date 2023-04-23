@@ -1,0 +1,34 @@
+{% extends 'page1/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="source-sans-pro mb-4">Загрузить видео</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.title.label_tag }}
+                    {{ form.title }}
+                </div>
+                <div class="mb-3">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                </div>
+                <div class="mb-3">
+                    {{ form.image.label_tag }}
+                    {{ form.image }}
+                </div>
+                <div class="mb-3">
+                    {{ form.file.label_tag }}
+                    {{ form.file }}
+                </div>
+                <div class="fixed-bottom">
+                    <button type="submit" class="btn btn-primary btn-lg active float-end">Загрузить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
