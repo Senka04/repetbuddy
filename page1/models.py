@@ -5,6 +5,12 @@ from django.contrib.auth.models import AbstractUser, User
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Добавьте другие поля для профиля пользователя
+
+class TutorProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    discipline = models.CharField(max_length=50)
+    hourly_rate = models.DecimalField(max_digits=6, decimal_places=2)
+
 class Video(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()

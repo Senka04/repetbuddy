@@ -1,6 +1,6 @@
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Video
+from .models import Video, User
 from .services import open_file
 from .forms import RegistrationForm
 from django.contrib.auth import authenticate, login, logout
@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
+
 
 @login_required
 def confirm_logout(request):
