@@ -10,8 +10,14 @@ class VideoForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
-            'file': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control form-control-lg btn-primary'}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control form-control-lg btn-primary'}),
+        }
+        labels = {
+            'title': 'Название',
+            'description': 'Описание',
+            'file': 'Видео',
+            'image': 'Обложка',
         }
 
 class RegistrationForm(UserCreationForm):

@@ -1,6 +1,7 @@
 {% extends 'page1/base.html' %}
 
 {% block content %}
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -15,20 +16,19 @@
                     {{ form.description.label_tag }}
                     {{ form.description }}
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="height: 80px;">
                     {{ form.image.label_tag }}
                     {{ form.image }}
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="height: 80px;">
                     {{ form.file.label_tag }}
                     {{ form.file }}
                 </div>
-                <div class="fixed-bottom">
+                <div style="height: 80px;">
                     <button type="submit" class="btn btn-primary btn-lg active float-end">Загрузить</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 {% endblock %}

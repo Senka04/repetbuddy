@@ -5,10 +5,10 @@
 <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet"/>
 {% endblock %}
 {% block content %}
-
 <div class="main-posts">
     <div class="container">
         <div class="row">
+            {% if video_list %}
             <div class="blog-masonry masonry-true">
                 {% for video in video_list %}
                 <div class="post-masonry col-md-4 col-sm-6">
@@ -23,6 +23,13 @@
                 </div>
                 {% endfor %}
             </div>
+            {% else %}
+            <div class="container">
+                <div class="row">
+                    <h2 style="margin-top: 20px;" class="source-sans-pro mb-4 text-dark">Видео отсутствуют</h2>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
