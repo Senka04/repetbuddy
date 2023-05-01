@@ -4,6 +4,11 @@
 <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
 <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet"/>
 {% endblock %}
+
+{% block logo %}
+<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home_user' %}">RepetBuddy</a>
+{% endblock %}
+
 {% block content %}
 <div class="main-posts">
     <div class="container">

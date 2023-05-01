@@ -19,13 +19,15 @@ def confirm_logout(request):
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('home')
+        return redirect('hello_page')
     else:
         return redirect(reverse('confirm_logout'))
 def login_view(request):
     # Проверяем, был ли уже выполнен вход на сайт
+
     if request.user.is_authenticated:
         return redirect('home')
+
 
     # Если это POST-запрос, обрабатываем данные формы
     if request.method == 'POST':
@@ -50,15 +52,25 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('login')
     else:
         form = RegistrationForm()
 
     return render(request, 'page1/registration/register.html', {'form': form})
 
-def index(request):
-    return render(request, 'page1/index.html') # представляем, что мы уже в templates
-
+def tutor_main(request):
+    return render(request, 'page1/tutor_main.html') # представляем, что мы уже в templates
+def user_main(request):
+    return render(request, 'page1/user_main.html') # представляем, что мы уже в templates
+def hello_page(request):
+    return render(request, 'page1/hello_page.html') # представляем, что мы уже в templates
+def gohome(request):
+    try:
+        tutor_profile = TutorProfile.objects.get(user=request.user)
+        if tutor_profile.is_tutor:
+            return redirect('home_tutor')
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
 def class9(request):
     return render(request, 'page1/class9.html')
 def class10(request):
@@ -74,7 +86,7 @@ def upload_video(request):
     try:
         tutor_profile = TutorProfile.objects.get(user=request.user)
     except TutorProfile.DoesNotExist:
-        return redirect('home')
+        return redirect('home_user')
     if tutor_profile.is_tutor:
         if request.method == 'POST':
             form = VideoForm(request.POST, request.FILES)
@@ -83,7 +95,7 @@ def upload_video(request):
                 video.user = request.user
                 video.save()
                 messages.success(request, 'Видео успешно загружено.')
-                return redirect('home')
+                return redirect('home_tutor')
         else:
             form = VideoForm()
         return render(request, 'page1/videopleer/upload_video.html', {'form': form})
@@ -93,7 +105,7 @@ def confirm_delete_video(request, pk):
     try:
         tutor_profile = TutorProfile.objects.get(user=request.user)
     except TutorProfile.DoesNotExist:
-        return redirect('home')
+        return redirect('home_user')
     if tutor_profile.is_tutor:
         video = get_object_or_404(Video, pk=pk)
         if request.user == video.user:
@@ -103,21 +115,21 @@ def delete_video(request, pk):
     try:
         tutor_profile = TutorProfile.objects.get(user=request.user)
     except TutorProfile.DoesNotExist:
-        return redirect('home')
+        return redirect('home_user')
     if tutor_profile.is_tutor:
         video = get_object_or_404(Video, pk=pk)
         if request.user != video.user:
             messages.error(request, "You don't have permission to delete this video.")
-            return redirect('home')
+            return redirect('home_user')
         if request.method == 'POST':
             video.delete()
             messages.success(request, 'Video has been deleted successfully!')
-            return redirect('home')
+            return redirect('home_tutor')
 
 @login_required
 def get_list_video(request):
     video_list = Video.objects.filter(user=request.user)
-    return render(request, 'page1/videopleer/home.html', {'video_list': video_list})
+    return render(request, 'page1/videopleer/home_tutor.html', {'video_list': video_list})
 
 
 @login_required

@@ -1,5 +1,9 @@
 {% extends 'page1/base.html' %}
 
+{% block logo %}
+    <a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home' %}">RepetBuddy</a>
+{% endblock %}
+
 {% block content %}
 <div class="container text-center">
     <h1 class="source-sans-pro">Вы действительно хотите выйти?</h1>

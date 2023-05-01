@@ -1,0 +1,27 @@
+{% extends 'page1/base.html' %}
+
+{% block title %}
+repetbuddy.ru
+{% endblock %}
+
+{% block logo %}
+<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home_user' %}">RepetBuddy</a>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row" data-masonry='{"percentPosition": true }'>
+        <div class="col-sm-6 col-lg-4 mb-4">
+            <div class="post-masonry card border-success mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                    <h1 class="card-title">Видео</h1>
+                    <a href="{% url 'home_video' %}" class="btn btn-outline-success">Перейти к роликам</a>
+                    <br>
+                    <br>
+                    <a href="{% url 'upload_video' %}" class="btn btn-outline-success">Загрузить видео</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
