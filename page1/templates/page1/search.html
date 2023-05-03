@@ -1,0 +1,38 @@
+{% extends 'page1/base.html' %}
+{% load static %}
+{% block title %}
+repetbuddy.ru
+{% endblock %}
+
+{% block logo %}
+<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'hello_page' %}">RepetBuddy</a>
+<form class="d-flex" action="{% url 'search' %}" method="get">
+    <input class="form-control me-4 mx-4" name="search_query" style="width: 700px;" type="search"
+           placeholder="Search User" aria-label="Search">
+    <button class="btn btn-outline-success me-4 mx-0" type="submit">Search</button>
+</form>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    {% if user_obj %}
+    {% for user in user_obj %}
+    <div class="container">
+        <div class="row" data-masonry='{"percentPosition": true }'>
+            <div class="col-sm-6 col-lg-4 mb-4">
+                <div class="post-masonry card border-success mb-3" style="max-width: 18rem;">
+                    <div class="card-body">
+                        <h1 class="card-title">{{user}}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="container">
+        <h5>No Results Found.</h5>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

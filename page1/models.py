@@ -1,6 +1,6 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -16,7 +16,7 @@ class TutorProfile(models.Model):
         return True
 
     def __str__(self):
-        return f'{self.user.username} TutorProfile'
+        return f'{self.user.username}'
 
 class Video(models.Model):
     title = models.CharField(max_length=100)

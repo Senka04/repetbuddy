@@ -1,6 +1,6 @@
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Video, User, TutorProfile
+from .models import Video, TutorProfile, UserProfile
 from .services import open_file
 from .forms import RegistrationForm
 from django.contrib.auth import authenticate, login, logout
@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
-
 
 @login_required
 def confirm_logout(request):
@@ -63,7 +62,16 @@ def tutor_main(request):
 def user_main(request):
     return render(request, 'page1/user_main.html') # представляем, что мы уже в templates
 def hello_page(request):
-    return render(request, 'page1/hello_page.html') # представляем, что мы уже в templates
+    return render(request, 'page1/hello_page.html')
+
+def search(request, query=None):
+    query = request.GET['search_query']
+    try:
+        user_obj = TutorProfile.objects.filter(user__username=query)
+    except:
+        user_obj = TutorProfile.objects.none()
+    params = {'user_obj': user_obj}
+    return render(request, 'page1/search.html', params)
 def gohome(request):
     try:
         tutor_profile = TutorProfile.objects.get(user=request.user)

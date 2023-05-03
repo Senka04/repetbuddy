@@ -1,9 +1,13 @@
 {% extends 'page1/base.html' %}
-
 {% block title %}
 repetbuddy.ru
 {% endblock %}
 
 {% block logo %}
 <a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'hello_page' %}">RepetBuddy</a>
+<form class="d-flex" action="{% url 'search' %}" method="get">
+    <input class="form-control me-2 mx-4" name="search_query" style="width: 700px;" type="search"
+           placeholder="Search User" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
 {% endblock %}
