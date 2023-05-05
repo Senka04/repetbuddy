@@ -9,16 +9,32 @@ repetbuddy.ru
 {% endblock %}
 
 {% block content %}
+<form class="d-flex" action="{% url 'search' %}" method="get">
+    <input class="form-control me-4 mx-4" name="search_query" style="width: 300px;" type="search"
+           placeholder="Можете написать ФИО репетитора" aria-label="Search">
+    <select class="form-select me-4 mx-0" name="subject" style="width: 300px;">
+        <option value="">Все предметы</option>
+        <option value="Математика">Математика</option>
+        <option value="Физика">Физика</option>
+        <option value="Химия">Химия</option>
+        <option value="Русский язык">Русский язык</option>
+        <!-- Добавьте здесь другие варианты предметов -->
+    </select>
+    <button class="btn btn-outline-success me-4 mx-0" type="submit">Найти</button>
+</form>
+<br>
+<br>
+
 <div class="container">
     <div class="row" data-masonry='{"percentPosition": true }'>
         <div class="col-sm-6 col-lg-4 mb-4">
-            <div class="post-masonry card border-success mb-3" style="max-width: 18rem;">
+            <div class="post-masonry card border-success mb-3" style="max-width: 30rem;">
                 <div class="card-body">
-                    <h1 class="card-title">Видео</h1>
-                    <a href="{% url 'home_video' %}" class="btn btn-outline-success">Перейти к роликам</a>
+                    <h2 class="card-title">Домашние задания</h2>
+                    <a class="btn btn-outline-success">Посмотреть</a>
                     <br>
                     <br>
-                    <a href="{% url 'upload_video' %}" class="btn btn-outline-success">Загрузить видео</a>
+                    <a class="btn btn-outline-success">Загрузить и отправить</a>
                 </div>
             </div>
         </div>

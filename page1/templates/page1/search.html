@@ -6,14 +6,23 @@ repetbuddy.ru
 
 {% block logo %}
 <a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'hello_page' %}">RepetBuddy</a>
-<form class="d-flex" action="{% url 'search' %}" method="get">
-    <input class="form-control me-4 mx-4" name="search_query" style="width: 700px;" type="search"
-           placeholder="Search User" aria-label="Search">
-    <button class="btn btn-outline-success me-4 mx-0" type="submit">Search</button>
-</form>
 {% endblock %}
 
 {% block content %}
+<form class="d-flex" action="{% url 'search' %}" method="get">
+    <input class="form-control me-4 mx-4" name="search_query" style="width: 300px;" type="search"
+           placeholder="Можете написать ФИО репетитора" aria-label="Search">
+    <select class="form-select me-4 mx-0" name="subject" style="width: 300px;">
+        <option value="">Все предметы</option>
+        <option value="Математика">Математика</option>
+        <option value="Физика">Физика</option>
+        <option value="Химия">Химия</option>
+        <option value="Русский язык">Русский язык</option>
+        <!-- Добавьте здесь другие варианты предметов -->
+    </select>
+    <button class="btn btn-outline-success me-4 mx-0" type="submit">Найти</button>
+</form>
+
 <div class="container my-4">
     {% if user_obj %}
     {% for user in user_obj %}
@@ -31,7 +40,7 @@ repetbuddy.ru
     {% endfor %}
     {% else %}
     <div class="container">
-        <h5>No Results Found.</h5>
+        <h3>Нет результатов</h3>
     </div>
     {% endif %}
 </div>
