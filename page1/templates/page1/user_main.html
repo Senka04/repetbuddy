@@ -12,14 +12,8 @@ repetbuddy.ru
 <form class="d-flex" action="{% url 'search' %}" method="get">
     <input class="form-control me-4 mx-4" name="search_query" style="width: 300px;" type="search"
            placeholder="Можете написать ФИО репетитора" aria-label="Search">
-    <select class="form-select me-4 mx-0" name="subject" style="width: 300px;">
-        <option value="">Все предметы</option>
-        <option value="Математика">Математика</option>
-        <option value="Физика">Физика</option>
-        <option value="Химия">Химия</option>
-        <option value="Русский язык">Русский язык</option>
-        <!-- Добавьте здесь другие варианты предметов -->
-    </select>
+    <input class="form-control me-4 mx-4" name="subject" style="width: 300px;" type="search"
+           placeholder="Все предметы" aria-label="Search">
     <button class="btn btn-outline-success me-4 mx-0" type="submit">Найти</button>
 </form>
 <br>

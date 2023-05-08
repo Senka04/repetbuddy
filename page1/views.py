@@ -76,11 +76,12 @@ def hello_page(request):
 def search(request, query="", subject=""):
     query = request.GET.get('search_query')
     subject = request.GET.get('subject')
-    user_obj = TutorProfile.objects.filter(user__username=query)
+    print('subject:'+subject)
+    user_obj = TutorProfile.objects.filter(user__username=query.lower())
     if query == "" and subject != "":
-        user_obj = TutorProfile.objects.filter(discipline=subject)
+        user_obj = TutorProfile.objects.filter(discipline=subject.lower())
     elif query != "" and subject != "":
-        user_obj = user_obj.filter(discipline=subject)
+        user_obj = user_obj.filter(discipline=subject.lower())
     params = {'user_obj': user_obj}
     return render(request, 'page1/search.html', params)
 
