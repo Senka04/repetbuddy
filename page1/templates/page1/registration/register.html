@@ -25,7 +25,7 @@
                     <input type="text" class="form-control" id="patronymic" name="patronymic">
                 </div>
                 <div class="mb-3">
-                    <label class="source-sans-pro" for="username">Псевдоним для входа на сайт:</label>
+                    <label class="source-sans-pro" for="username">Никнейм:</label>
                     <input type="text" class="form-control" id="username" name="username">
                 </div>
                 <div class="mb-3">
@@ -56,6 +56,19 @@
                 <br>
                 <br>
             </form>
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>Ой!</strong> Возникли следующие ошибки:
+                <ul>
+                    {% for field_errors in form.errors.values %}
+                    {% for error in field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
         </div>
     </div>
 </div>
@@ -78,5 +91,6 @@ $(document).ready(function() {
         $('.tutor-fields').toggle();
     });
 });
+
 </script>
 {% endblock %}
