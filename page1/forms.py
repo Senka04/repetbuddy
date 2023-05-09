@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Video, TutorProfile, UserProfile
+from django.core.exceptions import ValidationError
 
 
 class VideoForm(forms.ModelForm):
@@ -40,11 +41,8 @@ class RegistrationForm(UserCreationForm):
 
     def clean(self):
         cleaned_data = super().clean()
-
-        # очищаем все предыдущие ошибки
         self.errors.clear()
-
-        # проверяем поля last_name, first_name, email, username, password1, password2
+        # check the last_name, first_name, email, username, password1, password2 fields
         last_name = cleaned_data.get('last_name')
         if not last_name:
             self.add_error('last_name', 'Пожалуйста, введите фамилию.')
@@ -62,23 +60,21 @@ class RegistrationForm(UserCreationForm):
 
         email = cleaned_data.get('email')
         if not email:
-            self.add_error('email', 'Пожалуйста, введите свой адрес электронной почты.')
-        elif UserProfile.objects.filter(email=email).exists() or TutorProfile.objects.filter(email=email).exists():
-            self.add_error('email', 'Пользователь с таким адресом электронной почты уже существует.')
+            self.add_error('email', 'Пожалуйста, введите электронную почту.')
+        elif UserProfile.objects.filter(email=email.lower()).exists() or TutorProfile.objects.filter(email=email.lower()).exists():
+            self.add_error('email', 'Эта электронная почта уже используется.')
 
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if not password1:
             self.add_error('password1', 'Пожалуйста, введите пароль.')
-        if not password2:
-            self.add_error('password2', 'Пожалуйста, введите пароль повторно.')
-        if password1 and password2 and password1 != password2:
-            self.add_error(None, 'Пароли не совпадают.')
+        elif not password2:
+            self.add_error('password2', 'Пароли не совпадают.')
 
         return cleaned_data
-
     def save(self, commit=True):
         user = super().save(commit=True)
+        user.set_password(self.cleaned_data['password1'])
         if self.cleaned_data['is_tutor']:
             tutor_profile = TutorProfile.objects.create(
                 user=user,
@@ -87,7 +83,7 @@ class RegistrationForm(UserCreationForm):
                 first_name=self.cleaned_data['first_name'],
                 last_name=self.cleaned_data['last_name'],
                 patronymic=self.cleaned_data['patronymic'],
-                email=self.cleaned_data['email'],
+                email=self.cleaned_data['email'].lower(),
                 username=self.cleaned_data['username']
             )
             tutor_profile.save()
@@ -97,7 +93,7 @@ class RegistrationForm(UserCreationForm):
                 first_name=self.cleaned_data['first_name'],
                 last_name=self.cleaned_data['last_name'],
                 patronymic=self.cleaned_data['patronymic'],
-                email=self.cleaned_data['email'],
+                email=self.cleaned_data['email'].lower(),
                 username=self.cleaned_data['username']
             )
             user_profile.save()

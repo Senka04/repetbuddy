@@ -1,6 +1,7 @@
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video, TutorProfile, UserProfile
+from django.core.exceptions import ValidationError
 from .services import open_file
 from .forms import RegistrationForm
 from django.contrib.auth import authenticate, login, logout
@@ -53,14 +54,12 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.clean()
             form.save()
             return redirect('login')
     else:
         form = RegistrationForm()
 
     return render(request, 'page1/registration/register.html', {'form': form})
-
 
 def tutor_main(request):
     return render(request, 'page1/tutor_main.html')  # представляем, что мы уже в templates
@@ -78,7 +77,7 @@ def search(request, query="", subject=""):
     query = request.GET.get('search_query')
     subject = request.GET.get('subject')
     print('subject:'+subject)
-    user_obj = TutorProfile.objects.filter(user__username=query.lower())
+    user_obj = TutorProfile.objects.filter(username=query.lower())
     if query == "" and subject != "":
         user_obj = TutorProfile.objects.filter(discipline=subject.lower())
     elif query != "" and subject != "":
@@ -89,12 +88,11 @@ def search(request, query="", subject=""):
 
 def gohome(request):
     try:
-        tutor_profile = TutorProfile.objects.get(user=request.user)
+        tutor_profile = TutorProfile.objects.get(username=request.user)
         if tutor_profile.is_tutor:
             return redirect('home_tutor')
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
-
 
 def class9(request):
     return render(request, 'page1/class9.html')
