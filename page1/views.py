@@ -10,8 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
-
-
+from django.db.models import Q
 @login_required
 def confirm_logout(request):
     return render(request, 'page1/registration/confirm_logout.html')
@@ -76,12 +75,28 @@ def hello_page(request):
 def search(request, query="", subject=""):
     query = request.GET.get('search_query')
     subject = request.GET.get('subject')
-    print('subject:'+subject)
-    user_obj = TutorProfile.objects.filter(username=query.lower())
-    if query == "" and subject != "":
+    name_parts = query.split()
+    user_obj = TutorProfile.objects
+    if query != "" and subject == "":
+        for part in name_parts:
+            part = part.replace('ё', 'е')
+            user_obj = user_obj.filter(
+                Q(first_name__iexact=part.lower()) |
+                Q(last_name__iexact=part.lower()) |
+                Q(patronymic__iexact=part.lower())
+            )
+    elif query == "" and subject != "":
         user_obj = TutorProfile.objects.filter(discipline=subject.lower())
     elif query != "" and subject != "":
+        for part in name_parts:
+            part = part.replace('ё', 'е')
+            user_obj = user_obj.filter(
+                Q(first_name__iexact=part.lower()) |
+                Q(last_name__iexact=part.lower()) |
+                Q(patronymic__iexact=part.lower())
+            )
         user_obj = user_obj.filter(discipline=subject.lower())
+
     params = {'user_obj': user_obj}
     return render(request, 'page1/search.html', params)
 

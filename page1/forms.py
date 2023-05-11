@@ -80,9 +80,9 @@ class RegistrationForm(UserCreationForm):
                 user=user,
                 discipline=self.cleaned_data['discipline'].lower(),
                 hourly_rate=self.cleaned_data['hourly_rate'],
-                first_name=self.cleaned_data['first_name'],
-                last_name=self.cleaned_data['last_name'],
-                patronymic=self.cleaned_data['patronymic'],
+                first_name=self.cleaned_data['first_name'].lower().replace('ё', 'е'),
+                last_name=self.cleaned_data['last_name'].lower().replace('ё', 'е'),
+                patronymic=self.cleaned_data['patronymic'].lower().replace('ё', 'е'),
                 email=self.cleaned_data['email'].lower(),
                 username=self.cleaned_data['username']
             )
@@ -90,9 +90,9 @@ class RegistrationForm(UserCreationForm):
         else:
             user_profile = UserProfile.objects.create(
                 user=user,
-                first_name=self.cleaned_data['first_name'],
-                last_name=self.cleaned_data['last_name'],
-                patronymic=self.cleaned_data['patronymic'],
+                first_name=self.cleaned_data['first_name'].lower().replace('ё', 'е'),
+                last_name=self.cleaned_data['last_name'].lower().replace('ё', 'е'),
+                patronymic=self.cleaned_data['patronymic'].lower().replace('ё', 'е'),
                 email=self.cleaned_data['email'].lower(),
                 username=self.cleaned_data['username']
             )
