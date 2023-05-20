@@ -1,9 +1,9 @@
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Video, TutorProfile, UserProfile
+from .models import Video, TutorProfile, UserProfile, Course
 from django.core.exceptions import ValidationError
 from .services import open_file
-from .forms import RegistrationForm
+from .forms import RegistrationForm, CourseForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -109,16 +109,26 @@ def gohome(request):
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
 
-def class9(request):
-    return render(request, 'page1/class9.html')
+def courses(request):
+    return render(request, 'page1/courses.html')
+def course_create(request):
+    form = CourseForm()
+    return render(request, 'page1/course_create.html', {'form': form})
 
+def course_create_post(request):
+    if request.method == 'POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            print("i am here now bro")
+            form.save()
+            return redirect('courses')
+        else:
+            print("Form is not valid")  # Отладочное сообщение
+            print("Errors:", form.errors)  # Отладочное сообщение
+    else:
+        form = CourseForm()
 
-def class10(request):
-    return render(request, 'page1/class10.html')
-
-
-def class11(request):
-    return render(request, 'page1/class11.html')
+    return render(request, 'page1/course_create.html', {'form': form})
 
 
 # Create your views here.

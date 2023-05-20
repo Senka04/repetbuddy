@@ -2,9 +2,29 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Video, TutorProfile, UserProfile
+from .models import Video, TutorProfile, UserProfile, Course
 from django.core.exceptions import ValidationError
 
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['name', 'content']
+
+    def save(self, commit=True):
+        course = super().save(commit=False)  # commit=False, чтобы внести изменения перед сохранением
+
+        # Получаем очищенные данные из формы
+        name = self.cleaned_data['name']
+        content = self.cleaned_data['content']
+
+        # Устанавливаем значения полей модели
+        course.name = name
+        course.content = content
+
+        if commit:
+            course.save()
+
+        return course
 
 class VideoForm(forms.ModelForm):
     class Meta:
@@ -42,7 +62,7 @@ class RegistrationForm(UserCreationForm):
     def clean(self):
         cleaned_data = super().clean()
         self.errors.clear()
-        # check the last_name, first_name, email, username, password1, password2 fields
+
         last_name = cleaned_data.get('last_name')
         if not last_name:
             self.add_error('last_name', 'Пожалуйста, введите фамилию.')

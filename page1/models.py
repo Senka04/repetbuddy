@@ -2,6 +2,13 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import User
 
+
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+    content = models.TextField()
+
+    def __str__(self):
+        return f'{self.name}'
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(null=True)

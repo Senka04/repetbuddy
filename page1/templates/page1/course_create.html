@@ -1,0 +1,43 @@
+{% extends 'page1/base.html' %}
+
+{% block title %}
+Create Course
+{% endblock %}
+
+{% block logo %}
+<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home_tutor' %}">RepetBuddy</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Create Course</h2>
+        <form method="POST" action="{% url 'course_create_post' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_name">Course Name:</label>
+                <input type="text" class="form-control" id="id_name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="id_content">Course Content:</label>
+                <textarea id="id_content" name="content" rows="10" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<!-- Include the script for the text editor -->
+<script src="https://cdn.jsdelivr.net/npm/tinymce@5/tinymce.min.js"></script>
+<script>
+  tinymce.init({
+    selector: '#id_content',
+    plugins: 'advlist autolink lists link image charmap print preview anchor',
+    toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
+    menubar: false
+  });
+
+
+</script>
+{% endblock %}
