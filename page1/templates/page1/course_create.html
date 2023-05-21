@@ -12,7 +12,7 @@ Create Course
 <div class="row">
     <div class="col-md-12">
         <h2>Create Course</h2>
-        <form method="POST" action="{% url 'course_create_post' %}">
+        <form method="POST" action="{% url 'course_create_post' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_name">Course Name:</label>
@@ -28,16 +28,23 @@ Create Course
 </div>
 {% endblock %}
 {% block scripts %}
-<!-- Include the script for the text editor -->
-<script src="https://cdn.jsdelivr.net/npm/tinymce@5/tinymce.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
 <script>
-  tinymce.init({
-    selector: '#id_content',
-    plugins: 'advlist autolink lists link image charmap print preview anchor',
-    toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
-    menubar: false
-  });
-
-
+    // Создание редактора CKEditor
+    ClassicEditor.create(document.querySelector('#id_content'), {
+        mediaEmbed: {
+                    previewsInData: true
+        }
+    })
+    .then(editor => {
+        // При изменении данных в редакторе обновляем значение в скрытом поле формы
+        editor.model.document.on('change:data', () => {
+            const content = editor.getData();
+            document.querySelector('#id_content').value = content;
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    });
 </script>
 {% endblock %}

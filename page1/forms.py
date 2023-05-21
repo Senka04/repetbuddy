@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Video, TutorProfile, UserProfile, Course
+from ckeditor.widgets import CKEditorWidget
 from django.core.exceptions import ValidationError
 
 class CourseForm(forms.ModelForm):
