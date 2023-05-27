@@ -1,5 +1,5 @@
 {% extends 'page1/base.html' %}
-
+{% load static %}
 {% block title %}
 Create Course
 {% endblock %}
@@ -8,19 +8,23 @@ Create Course
 <a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home_tutor' %}">RepetBuddy</a>
 {% endblock %}
 
+{% block links %}
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-md-12">
         <h2>Create Course</h2>
         <form method="POST" action="{% url 'course_create_post' %}" enctype="multipart/form-data">
             {% csrf_token %}
+            {{ form.media }}
             <div class="form-group">
                 <label for="id_name">Course Name:</label>
                 <input type="text" class="form-control" id="id_name" name="name" required>
             </div>
             <div class="form-group">
                 <label for="id_content">Course Content:</label>
-                <textarea id="id_content" name="content" rows="10" class="form-control" required></textarea>
+                <textarea id="id_content" name="content" rows="10" class="form-control" required>{{ article.full_description|safe }}</textarea>
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
@@ -28,23 +32,5 @@ Create Course
 </div>
 {% endblock %}
 {% block scripts %}
-<script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
-<script>
-    // Создание редактора CKEditor
-    ClassicEditor.create(document.querySelector('#id_content'), {
-        mediaEmbed: {
-                    previewsInData: true
-        }
-    })
-    .then(editor => {
-        // При изменении данных в редакторе обновляем значение в скрытом поле формы
-        editor.model.document.on('change:data', () => {
-            const content = editor.getData();
-            document.querySelector('#id_content').value = content;
-        });
-    })
-    .catch(error => {
-        console.error(error);
-    });
-</script>
+
 {% endblock %}

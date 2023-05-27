@@ -1,11 +1,12 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import User
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
-    content = models.TextField()
+    content = CKEditor5Field(verbose_name='Текст курса', config_name='extends')
 
     def __str__(self):
         return f'{self.name}'

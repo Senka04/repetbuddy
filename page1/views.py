@@ -119,7 +119,6 @@ def course_create_post(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
         if form.is_valid():
-            print("i am here now bro")
             form.save()
             return redirect('courses')
         else:

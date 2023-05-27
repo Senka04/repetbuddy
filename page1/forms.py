@@ -3,13 +3,27 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Video, TutorProfile, UserProfile, Course
-from ckeditor.widgets import CKEditorWidget
-from django.core.exceptions import ValidationError
-
+from django_ckeditor_5.widgets import CKEditor5Widget
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'content']
+        fields = ["name", "content"]
+        widgets = {
+            "content": CKEditor5Widget(
+                attrs={"class": "django_ckeditor_5"}, config_name="comment"
+            )
+        }
+
+    def __init__(self, *args, **kwargs):
+        """
+        Обновление стилей формы под Bootstrap
+        """
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete': 'off'})
+
+        self.fields['content'].widget.attrs.update({'class': 'form-control django_ckeditor_5'})
+        self.fields['content'].required = False
 
     def save(self, commit=True):
         course = super().save(commit=False)  # commit=False, чтобы внести изменения перед сохранением
