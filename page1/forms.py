@@ -103,9 +103,19 @@ class RegistrationForm(UserCreationForm):
         password2 = self.cleaned_data.get('password2')
         if not password1:
             self.add_error('password1', 'Пожалуйста, введите пароль.')
-        elif not password2:
+        elif len(password1) < 8:
+            self.add_error('password1', 'Пароль должен содержать как минимум 8 символов')
+            self.errors.pop('password2', None)
+        if password1 is not None and (password1.isdigit() or password1.isalpha()):
+            self.add_error('password1', 'Пароль должен содержать как минимум одну букву и одну цифру.')
+            self.errors.pop('password2', None)
+        if not password2:
             self.add_error('password2', 'Пароли не совпадают.')
 
+        hourly_rate = self.cleaned_data.get('hourly_rate')
+        if hourly_rate is not None:
+            if not str(hourly_rate).isdigit():
+                self.add_error('hourly_rate', 'Почасовая ставка должна быть положительным целым числом.')
         return cleaned_data
     def save(self, commit=True):
         user = super().save(commit=True)

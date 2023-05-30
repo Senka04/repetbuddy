@@ -59,11 +59,11 @@ def register(request):
         form = RegistrationForm()
 
     return render(request, 'page1/registration/register.html', {'form': form})
-
+@login_required
 def tutor_main(request):
     return render(request, 'page1/tutor_main.html')  # представляем, что мы уже в templates
 
-
+@login_required
 def user_main(request):
     return render(request, 'page1/user_main.html')  # представляем, что мы уже в templates
 
@@ -108,13 +108,15 @@ def gohome(request):
             return redirect('home_tutor')
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
-
+@login_required
 def courses(request):
     return render(request, 'page1/courses.html')
+@login_required
 def course_create(request):
     form = CourseForm()
     return render(request, 'page1/course_create.html', {'form': form})
 
+@login_required
 def course_create_post(request):
     if request.method == 'POST':
         form = CourseForm(request.POST)
