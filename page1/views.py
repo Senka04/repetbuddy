@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video, TutorProfile, UserProfile, Course
 from django.core.exceptions import ValidationError
 from .services import open_file
-from .forms import RegistrationForm, CourseForm
+from .forms import RegistrationForm, CourseCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -110,24 +110,28 @@ def gohome(request):
         return redirect('home_user')
 @login_required
 def courses(request):
-    return render(request, 'page1/courses.html')
+    course_list = Course.objects.filter(author=request.user)
+    return render(request, 'page1/courses.html', {'course_list': course_list})
+
 @login_required
 def course_create(request):
-    form = CourseForm()
+    form = CourseCreateForm()
     return render(request, 'page1/course_create.html', {'form': form})
 
 @login_required
 def course_create_post(request):
     if request.method == 'POST':
-        form = CourseForm(request.POST)
+        form = CourseCreateForm(request.POST)
         if form.is_valid():
-            form.save()
+            course = form.save(commit=False)
+            course.author = request.user
+            course.save()
             return redirect('courses')
         else:
             print("Form is not valid")  # Отладочное сообщение
             print("Errors:", form.errors)  # Отладочное сообщение
     else:
-        form = CourseForm()
+        form = CourseCreateForm()
 
     return render(request, 'page1/course_create.html', {'form': form})
 

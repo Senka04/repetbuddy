@@ -12,25 +12,23 @@ Create Course
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Create Course</h2>
-        <form method="POST" action="{% url 'course_create_post' %}" enctype="multipart/form-data">
+<div class="card mb-3 border-0 nth-shadow">
+    <div class="card-body">
+        <div class="card-title nth-card-title">
+            <h4>Добавление курса</h4>
+        </div>
+        <form method="post" action="{% url 'course_create_post' %}" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.media }}
-            <div class="form-group">
-                <label for="id_name">Course Name:</label>
-                <input type="text" class="form-control" id="id_name" name="name" required>
+            {{ form.as_p }}
+            <div class="d-grid gap-2 d-md-block mt-2">
+                <button type="submit" class="btn btn-dark">Добавить курс</button>
             </div>
-            <div class="form-group">
-                <label for="id_content">Course Content:</label>
-                <textarea id="id_content" name="content" rows="10" class="form-control" required>{{ article.full_description|safe }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
 </div>
 {% endblock %}
+
 {% block scripts %}
 
 {% endblock %}

@@ -7,6 +7,7 @@ from django_ckeditor_5.fields import CKEditor5Field
 class Course(models.Model):
     name = models.CharField(max_length=100)
     content = CKEditor5Field(verbose_name='Текст курса', config_name='extends')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
 
     def __str__(self):
         return f'{self.name}'

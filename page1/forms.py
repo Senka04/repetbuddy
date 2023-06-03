@@ -3,17 +3,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Video, TutorProfile, UserProfile, Course
-from django_ckeditor_5.widgets import CKEditor5Widget
-class CourseForm(forms.ModelForm):
+
+
+class CourseCreateForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ["name", "content"]
-        widgets = {
-            "content": CKEditor5Widget(
-                attrs={"class": "django_ckeditor_5"}, config_name="comment"
-            )
-        }
-
+        fields = ('name', 'content')
     def __init__(self, *args, **kwargs):
         """
         Обновление стилей формы под Bootstrap
@@ -25,21 +20,8 @@ class CourseForm(forms.ModelForm):
         self.fields['content'].widget.attrs.update({'class': 'form-control django_ckeditor_5'})
         self.fields['content'].required = False
 
-    def save(self, commit=True):
-        course = super().save(commit=False)  # commit=False, чтобы внести изменения перед сохранением
 
-        # Получаем очищенные данные из формы
-        name = self.cleaned_data['name']
-        content = self.cleaned_data['content']
 
-        # Устанавливаем значения полей модели
-        course.name = name
-        course.content = content
-
-        if commit:
-            course.save()
-
-        return course
 
 class VideoForm(forms.ModelForm):
     class Meta:
