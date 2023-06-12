@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
 
@@ -15,6 +15,7 @@ urlpatterns = [
     path('course_create', views.course_create, name='course_create'),
     path('course_create_post', views.course_create_post, name='course_create_post'),
     path('register', views.register, name='register'),
+    path('tutor_info/<int:user_id>/', views.tutor_info, name='tutor_info'),
     path('home_video/stream/<int:pk>/', views.get_streaming_video, name='stream'),
     path('home_video/<int:pk>/', views.get_video, name='video'),
     path('home_video', views.get_list_video, name='home_video'),

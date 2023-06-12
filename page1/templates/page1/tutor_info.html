@@ -1,0 +1,16 @@
+{% extends 'page1/base.html' %}
+{% block title %}
+repetbuddy.ru
+{% endblock %}
+
+
+{% block logo %}
+<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'hello_page' %}">RepetBuddy</a>
+{% endblock %}
+
+
+{% block content %}
+<h1>Информация</h1>
+    <p><strong>Имя:</strong> {{ tutor.first_name|capfirst }}</p>
+    <p><strong>Предметы:</strong> {{ tutor.discipline }}</p>
+{% endblock %}

@@ -9,17 +9,18 @@ class CourseCreateForm(forms.ModelForm):
     class Meta:
         model = Course
         fields = ('name', 'content')
+        labels = {
+            'name': 'Название',
+            'content': 'Курс',
+        }
+
     def __init__(self, *args, **kwargs):
-        """
-        Обновление стилей формы под Bootstrap
-        """
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control', 'autocomplete': 'off'})
 
         self.fields['content'].widget.attrs.update({'class': 'form-control django_ckeditor_5'})
         self.fields['content'].required = False
-
 
 
 

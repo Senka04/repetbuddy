@@ -1,16 +1,23 @@
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Video, TutorProfile, UserProfile, Course
-from django.core.exceptions import ValidationError
+from .models import Video, TutorProfile, Course
+from django.contrib.auth.models import Permission
 from .services import open_file
 from .forms import RegistrationForm, CourseCreateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
 from django.db.models import Q
+
+
+def tutor_info(request, user_id: int):
+    tutor = TutorProfile.objects.get(user_id=user_id)
+    return render(request, 'page1/tutor_info.html', {'tutor': tutor})
+
+
 @login_required
 def confirm_logout(request):
     return render(request, 'page1/registration/confirm_logout.html')
@@ -108,10 +115,13 @@ def gohome(request):
             return redirect('home_tutor')
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
+
+
 @login_required
 def courses(request):
     course_list = Course.objects.filter(author=request.user)
     return render(request, 'page1/courses.html', {'course_list': course_list})
+
 
 @login_required
 def course_create(request):

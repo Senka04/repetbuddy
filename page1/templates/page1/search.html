@@ -8,6 +8,7 @@ repetbuddy.ru
 <a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home' %}">RepetBuddy</a>
 {% endblock %}
 
+
 {% block content %}
 <form class="d-flex" action="{% url 'search' %}" method="get">
     <input class="form-control me-4 mx-4" name="search_query" style="width: 300px;" type="search"
@@ -23,9 +24,11 @@ repetbuddy.ru
         {% for user in user_obj %}
         <div class="col-sm-6 col-lg-3 mb-4">
             <div class="post-masonry card border-success mb-3" style="max-width: 18rem;">
-                <div class="card-body">
-                    <h1 class="card-title">{{ user.last_name|capfirst }} {{ user.first_name|capfirst }} {{ user.patronymic|capfirst }}</h1>
-                </div>
+                <a href="{% url 'tutor_info' user.user_id %}" class="card-link text-dark text-decoration-none">
+                    <div class="card-body">
+                        <h1 class="card-title">{{ user.last_name|capfirst }} {{ user.first_name|capfirst }} {{ user.patronymic|capfirst }}</h1>
+                    </div>
+                </a>
             </div>
         </div>
         {% endfor %}
