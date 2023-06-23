@@ -59,10 +59,13 @@
                     <input class="form-check-input" type="checkbox" value="1" id="is_tutor" name="is_tutor">
                     <label class="form-check-label" for="is_tutor">Я репетитор</label>
                 </div>
-                <div class="mb-3 tutor-fields" style="display: none;">
-                    <label class="source-sans-pro" for="discipline">Дисциплина:</label>
-                    <input type="text" class="form-control" id="discipline" name="discipline">
+                <div class="input-group mb-3 tutor-fields" style="display: none;">
+                    <input type="text" id="tag-input" class="form-control" placeholder="Введите теги">
+                    <input type="hidden" id="discipline" name="discipline">
+                    <button id="add-tag-button" class="btn btn-primary" type="button">Добавить тег</button>
                 </div>
+                <div id="tag-list"></div>
+
                 <div class="mb-3 tutor-fields" style="display: none;">
                     <label class="source-sans-pro" for="hourly_rate">Почасовая ставка:</label>
                     <input type="text" class="form-control" id="hourly_rate" name="hourly_rate">
@@ -93,13 +96,76 @@ $(document).ready(function() {
         $('.tutor-fields').toggle();
     });
 });
+</script>
+<!-- для тегов:-->
+<script>
+   const inputs = document.querySelectorAll('input');
+    inputs.forEach((input, index) => {
+      if (input.id !== 'tag-input') {
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            const nextInput = inputs[index + 1];
+            if (nextInput) {
+              nextInput.focus();
+            }
+           }
+        });
+      }
+   });
 
+  const tagInput = document.querySelector('#tag-input');
+  const addTagButton = document.querySelector('#add-tag-button');
+  const tagList = document.querySelector('#tag-list');
+  let tags = [];
 
+  tagInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        if (tagInput.value.trim() !== '') {
+          addTag(tagInput.value.trim());
+        }
+      }
+  });
 
+  function addTag(tag) {
+    tags.push(tag);
+    updateTagList();
+    tagInput.value = '';
+  }
 
+  function removeTag(index) {
+    tags.splice(index, 1);
+    updateTagList();
+  }
 
+  function updateTagList() {
+    tagList.innerHTML = '';
+    tags.forEach((tag, index) => {
+      const tagEl = document.createElement('span');
+      tagEl.classList.add('badge', 'bg-secondary', 'me-2');
+      tagEl.textContent = tag;
+      const removeButton = document.createElement('button');
+      removeButton.classList.add('btn', 'btn-sm', 'btn-secondary');
+      removeButton.textContent = 'X';
+      removeButton.addEventListener('click', () => removeTag(index));
+      tagEl.appendChild(removeButton);
+      tagList.appendChild(tagEl);
+    });
+    document.querySelector('#discipline').value = tags.join(', ');
+  }
 
+  addTagButton.addEventListener('click', () => {
+    if (tagInput.value.trim() !== '') {
+      addTag(tagInput.value.trim());
+    }
+  });
 
+  tagInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Backspace' && tagInput.value === '' && tags.length > 0) {
+      removeTag(tags.length - 1);
+    }
+  });
 
 </script>
 {% endblock %}

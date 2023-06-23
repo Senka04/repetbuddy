@@ -49,7 +49,7 @@ class RegistrationForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True)
     patronymic = forms.CharField(max_length=30, required=False)
     is_tutor = forms.BooleanField(required=False)
-    discipline = forms.CharField(max_length=50, required=False)
+    discipline = forms.CharField(max_length=100, required=False)
     hourly_rate = forms.DecimalField(max_digits=6, decimal_places=2, required=False)
 
     class Meta:
