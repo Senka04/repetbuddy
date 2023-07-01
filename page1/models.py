@@ -2,6 +2,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
+import uuid
 
 
 
@@ -42,11 +43,12 @@ class TutorProfile(models.Model):
 
 
 class Video(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     title = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.ImageField(upload_to='image/')
+    image = models.ImageField(upload_to='uploads/previews/')
     file = models.FileField(
-        upload_to='video/',
+        upload_to='uploads/videos/',
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)

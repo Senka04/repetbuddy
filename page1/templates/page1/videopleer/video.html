@@ -1,58 +1,60 @@
 {% extends 'page1/base.html' %}
-{% load static %}
+
 {% block links %}
-<link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
-<link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet"/>
+<link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet">
 {% endblock %}
 
 {% block logo %}
 <a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home_user' %}">RepetBuddy</a>
 {% endblock %}
 
-{% block content %}
-<div class="main-posts">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <img class="single-video" src="{{ video.image.url }}" alt="">
-            </div>
-            <div class="col-md-6 col-sm-6">
-                <span class="date">{{ video.create_at }}</span>
-                <h4><a href="{% url 'video' video.id %}">{{ video.title }}</a></h4>
-                <p>{{ video.description }}</p>
+{% block styles %}
+<style>
+    .video-js {
+        width: 700px;
+        height: calc(700px * 9 / 16);
+    }
+    .mt-2 {
+        width: 600px;
+    }
+    .video-js .vjs-big-play-button {
+        display: none;
+    }
 
-                {% if request.user == video.user %}
-                <form action="{% url 'confirm_delete_video' video.pk %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Удалить видео</button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <video
-                        id="my-video"
-                        class="video-js"
-                        controls
-                        preload="auto"
-                        width="1000"
-                        height="800"
-                        data-setup="{}"
-                >
-                    <source src="{% url 'stream' video.id %}" type="video/mp4"/>
-                    <source src="{% url 'stream' video.id %}" type="video/webm"/>
-                </video>
-            </div>
-        </div>
-    </div>
-</div>
-{% block scripts %}
-<script src="{% static 'js/vendor/modernizr-2.6.2.min.js' %}"></script>
-<script src="{% static 'js/vendor/jquery-1.10.2.min.js' %}"></script>
-<script src="{% static 'js/min/plugins.min.js' %}"></script>
-<script src="{% static 'js/min/main.min.js' %}"></script>
-<script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+
+
+
+</style>
 {% endblock %}
 
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <video
+                    id="my-video"
+                    class="video-js"
+                    controls
+                    preload="auto"
+                    data-setup="{}"
+                    autoplay
+            >
+                <source src="{% url 'stream' video.uuid %}" type="video/mp4"/>
+                <source src="{% url 'stream' video.uuid %}" type="video/webm"/>
+            </video>
+        </div>
+    </div>
+    <h5 class="mt-2">{{ video.title }}</h5>
+    <p>{{ video.description }}</p>
+    {% if request.user == video.user %}
+    <form action="{% url 'confirm_delete_video' video.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Удалить видео</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
 {% endblock %}

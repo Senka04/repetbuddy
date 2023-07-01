@@ -1,3 +1,4 @@
+import uuid
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video, TutorProfile, Course
@@ -13,9 +14,11 @@ from .forms import VideoForm
 from django.db.models import Q
 
 
+
 def tutor_info(request, user_id: int):
     tutor = TutorProfile.objects.get(user_id=user_id)
-    return render(request, 'page1/tutor_info.html', {'tutor': tutor})
+    video_list = Video.objects.filter(user_id=user_id)
+    return render(request, 'page1/tutor_info.html', {'tutor': tutor, 'video_list': video_list})
 
 
 @login_required
@@ -93,7 +96,7 @@ def search(request, query="", subject=""):
                 Q(patronymic__iexact=part.lower())
             )
     elif query == "" and subject != "":
-        user_obj = TutorProfile.objects.filter(discipline=subject.lower())
+        user_obj = TutorProfile.objects.filter(discipline__contains=subject.lower())
     elif query != "" and subject != "":
         for part in name_parts:
             part = part.replace('ё', 'е')
@@ -102,8 +105,9 @@ def search(request, query="", subject=""):
                 Q(last_name__iexact=part.lower()) |
                 Q(patronymic__iexact=part.lower())
             )
-        user_obj = user_obj.filter(discipline=subject.lower())
-
+        user_obj = user_obj.filter(discipline__contains=subject.lower())
+    elif query == "" and subject == "":
+        user_obj = TutorProfile.objects.none()
     params = {'user_obj': user_obj}
     return render(request, 'page1/search.html', params)
 
@@ -161,6 +165,7 @@ def upload_video(request):
             if form.is_valid():
                 video = form.save(commit=False)
                 video.user = request.user
+                video.uuid = uuid.uuid4()
                 video.save()
                 messages.success(request, 'Видео успешно загружено.')
                 return redirect('home_tutor')
@@ -205,20 +210,15 @@ def get_list_video(request):
 
 
 @login_required
-def get_video(request, pk: int):
-    _video = get_object_or_404(Video, id=pk, user=request.user)
+def get_video(request, pk: str):
+    _video = get_object_or_404(Video, uuid=pk)
     return render(request, "page1/videopleer/video.html", {"video": _video})
 
 
 @login_required
-def get_streaming_video(request, pk: int):
+def get_streaming_video(request, pk: str):
     file, status_code, content_length, content_range = open_file(request, pk)
-
-    # Check if the video belongs to the user
-    video = get_object_or_404(Video, id=pk, user=request.user)
-
     response = StreamingHttpResponse(file, status=status_code, content_type='video/mp4')
-
     response['Accept-Ranges'] = 'bytes'
     response['Content-Length'] = str(content_length)
     response['Cache-Control'] = 'no-cache'

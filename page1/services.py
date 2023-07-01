@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import IO, Generator
 from django.shortcuts import get_object_or_404
-
 from .models import Video
 
 
@@ -28,8 +27,8 @@ def ranged(
         file.close()
 
 
-def open_file(request, video_pk: int) -> tuple:
-    _video = get_object_or_404(Video, pk=video_pk)
+def open_file(request, video_pk: str) -> tuple:
+    _video = get_object_or_404(Video, uuid=video_pk)
 
     path = Path(_video.file.path)
 
