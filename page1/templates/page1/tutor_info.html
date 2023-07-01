@@ -9,7 +9,7 @@
 <style>
 .card {
     overflow: hidden;
-    width: 240px;
+    width: 200px;
 }
 
 .card::before {
@@ -27,30 +27,67 @@
     object-fit: cover;
 }
 .mt-2 {
-    width: 240px;
+    width: 200px;
 }
+
+@media (max-width: 1050px) {
+  .card {
+      width: 160px;
+  }
+  .mt-2 {
+    width: 160px;
+}
+}
+
+@media (max-width: 800px) {
+  .card {
+      width: 140px;
+  }
+  .mt-2 {
+    width: 140px;
+}
+}
+.video-title {
+    position: absolute;
+    color: dark;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 3px solid rgba(255, 255, 255, 0.01);
+    border-radius: 5px;
+}
+.video-title:hover {
+    display: block;
+    white-space: normal;
+    overflow: visible;
+}
+
+
+
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="bg-light rounded p-4">
-                <div class="row">
-                    {% for video in video_list %}
-                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                            <a href="{% url 'video' video.uuid %}" class="card">
-                                <img class="card-img-top" src="{{ video.image.url }}" alt="{{ video.title }}">
-                            </a>
-                            <h5 class="mt-2">{{ video.title }}</h5>
-                        </div>
-                    {% endfor %}
+
+<div class="row justify-content-start">
+    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8" style="margin-left: 10px;">
+        <div class="bg-light rounded p-4">
+            <div class="row">
+                {% for video in video_list %}
+                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-4 mt-4">
+                    <a href="{% url 'video' video.uuid %}" class="card">
+                        <img class="card-img-top" src="{{ video.image.url }}" alt="{{ video.title }}">
+                    </a>
+                    <h5 class="mt-2 video-title">{{ video.title }}</h5>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div>
+
 
 {% endblock %}
 
