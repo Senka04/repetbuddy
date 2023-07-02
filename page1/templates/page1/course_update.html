@@ -1,0 +1,20 @@
+{% extends 'page1/base.html' %}
+
+{% block logo %}
+<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home_tutor' %}">RepetBuddy</a>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-3 border-0 nth-shadow">
+    <div class="card-body">
+        <form method="post" action="{% url 'course_update_post' course.uuid %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <div class="d-grid gap-2 d-md-block mt-2">
+                <button type="submit" class="btn btn-dark">Обновить курс</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -23,6 +23,17 @@ class CourseCreateForm(forms.ModelForm):
         self.fields['content'].required = False
 
 
+class CourseUpdateForm(CourseCreateForm):
+    class Meta:
+        model = Course
+        fields = CourseCreateForm.Meta.fields
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['content'].widget.attrs.update({'class': 'form-control django_ckeditor_5'})
+        self.fields['content'].required = False
+
 
 class VideoForm(forms.ModelForm):
     class Meta:

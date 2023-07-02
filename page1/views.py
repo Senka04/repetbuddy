@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video, TutorProfile, Course
 from django.contrib.auth.models import Permission
 from .services import open_file
-from .forms import RegistrationForm, CourseCreateForm
+from .forms import RegistrationForm, CourseCreateForm, CourseUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, permission_required
@@ -14,11 +14,17 @@ from .forms import VideoForm
 from django.db.models import Q
 
 
+def course_read(request, pk: str):
+    # Получаем отформатированный текст из базы данных
+    course = Course.objects.get(uuid=pk)
+    content = course.content
+    return render(request, 'page1/course_read.html', {'content': content})
 
 def tutor_info(request, user_id: int):
     tutor = TutorProfile.objects.get(user_id=user_id)
     video_list = Video.objects.filter(user_id=user_id)
-    return render(request, 'page1/tutor_info.html', {'tutor': tutor, 'video_list': video_list})
+    course_list = Course.objects.filter(author=user_id)
+    return render(request, 'page1/tutor_info.html', {'tutor': tutor, 'video_list': video_list, 'course_list': course_list})
 
 
 @login_required
@@ -132,6 +138,7 @@ def course_create(request):
     form = CourseCreateForm()
     return render(request, 'page1/course_create.html', {'form': form})
 
+
 @login_required
 def course_create_post(request):
     if request.method == 'POST':
@@ -139,6 +146,7 @@ def course_create_post(request):
         if form.is_valid():
             course = form.save(commit=False)
             course.author = request.user
+            course.uuid = uuid.uuid4()
             course.save()
             return redirect('courses')
         else:
@@ -150,7 +158,24 @@ def course_create_post(request):
     return render(request, 'page1/course_create.html', {'form': form})
 
 
-# Create your views here.
+@login_required
+def course_update(request, pk: str):
+    course = get_object_or_404(Course, uuid=pk)
+    form = CourseUpdateForm(instance=course)
+    return render(request, 'page1/course_update.html', {'form': form, 'course': course})
+
+
+@login_required
+def course_update_post(request, pk: str):
+    course = get_object_or_404(Course, uuid=pk)
+    if request.method == 'POST':
+        form = CourseUpdateForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:
+        form = CourseUpdateForm(instance=course)
+    return render(request, 'page1/course_update.html', {'form': form, 'course': course})
 
 
 @login_required

@@ -1,0 +1,17 @@
+{% extends 'page1/base.html' %}
+{% load static %}
+
+{% block logo %}
+<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home_tutor' %}">RepetBuddy</a>
+{% endblock %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static '/django_ckeditor_5/dist/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="ck-content">
+    {{content|safe}}
+</div>
+
+{% endblock %}

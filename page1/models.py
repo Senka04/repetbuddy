@@ -3,10 +3,19 @@ from django.db import models
 from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 import uuid
-
+from django.utils import timezone
 
 
 class Course(models.Model):
+    uuid = models.UUIDField(unique=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            timestamp = timezone.now().timestamp()
+            data = f"{self.pk}{timestamp}"
+            self.uuid = uuid.uuid5(uuid.NAMESPACE_DNS, data)
+        super().save(*args, **kwargs)
+
     name = models.CharField(max_length=100)
     content = CKEditor5Field(verbose_name='Текст курса', config_name='extends')
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
