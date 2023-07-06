@@ -7,7 +7,28 @@ repetbuddy.ru
 <a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'hello_page' %}">RepetBuddy</a>
 {% endblock %}
 
+{% block styles %}
+<style>
+.my-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 50%;
+    z-index: -1;
+    background-image: linear-gradient(to bottom, #FFB6C1, #ADD8E6, #90EE90);
+}
+#myElement {
+    transition: opacity 1s ease;
+  }
+</style>
+
+{% endblock %}
+
 {% block content %}
+<div id="myElement" class="my-gradient">
+</div>
 <form class="d-flex" action="{% url 'search' %}" method="get">
     <input class="form-control me-4 mx-4" name="search_query" style="width: 300px;" type="search"
            placeholder="Можете написать ФИО репетитора" aria-label="Search">
@@ -15,5 +36,20 @@ repetbuddy.ru
            placeholder="Все предметы" aria-label="Search">
     <button class="btn btn-outline-success me-4 mx-0" type="submit">Найти</button>
 </form>
+<div style="height: 2000px;"></div>
+<p>Текст внизу страницы</p>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.addEventListener('scroll', function() {
+  var element = document.getElementById('myElement');
+  var scrollTop = document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var opacity = Math.max(0, 0.5 - (scrollTop / height)*1.5);
+  element.style.opacity = opacity;
+});
+
+</script>
 {% endblock %}
