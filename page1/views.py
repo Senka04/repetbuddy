@@ -228,19 +228,19 @@ def delete_video(request, pk):
             return redirect('home_tutor')
 
 
-@login_required
+
 def get_list_video(request):
     video_list = Video.objects.filter(user=request.user)
     return render(request, 'page1/videopleer/home.html', {'video_list': video_list})
 
 
-@login_required
+
 def get_video(request, pk: str):
     _video = get_object_or_404(Video, uuid=pk)
     return render(request, "page1/videopleer/video.html", {"video": _video})
 
 
-@login_required
+
 def get_streaming_video(request, pk: str):
     file, status_code, content_length, content_range = open_file(request, pk)
     response = StreamingHttpResponse(file, status=status_code, content_type='video/mp4')
