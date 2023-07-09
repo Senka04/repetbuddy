@@ -19,6 +19,8 @@ class Course(models.Model):
     name = models.CharField(max_length=100)
     content = CKEditor5Field(verbose_name='Текст курса', config_name='extends')
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
+    image = models.ImageField(upload_to='uploads/previews/', null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -54,7 +56,7 @@ class TutorProfile(models.Model):
 class Video(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     image = models.ImageField(upload_to='uploads/previews/')
     file = models.FileField(
         upload_to='uploads/videos/',

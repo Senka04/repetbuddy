@@ -2,17 +2,15 @@ import uuid
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video, TutorProfile, Course
-from django.contrib.auth.models import Permission
 from .services import open_file
 from .forms import RegistrationForm, CourseCreateForm, CourseUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
 from django.db.models import Q
-
 
 def course_read(request, pk: str):
     # Получаем отформатированный текст из базы данных
@@ -142,7 +140,7 @@ def course_create(request):
 @login_required
 def course_create_post(request):
     if request.method == 'POST':
-        form = CourseCreateForm(request.POST)
+        form = CourseCreateForm(request.POST, request.FILES)
         if form.is_valid():
             course = form.save(commit=False)
             course.author = request.user
@@ -169,13 +167,20 @@ def course_update(request, pk: str):
 def course_update_post(request, pk: str):
     course = get_object_or_404(Course, uuid=pk)
     if request.method == 'POST':
-        form = CourseUpdateForm(request.POST, instance=course)
+        form = CourseUpdateForm(request.POST, request.FILES, instance=course)
         if form.is_valid():
             form.save()
             return redirect('courses')
     else:
         form = CourseUpdateForm(instance=course)
     return render(request, 'page1/course_update.html', {'form': form, 'course': course})
+
+
+@login_required
+def delete_course(request, pk: str):
+    course = get_object_or_404(Course, uuid=pk)
+    course.delete()
+    return redirect('courses')
 
 
 @login_required

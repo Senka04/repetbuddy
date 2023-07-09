@@ -8,10 +8,12 @@ from .models import Video, TutorProfile, UserProfile, Course
 class CourseCreateForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ('name', 'content')
+        fields = ('name', 'content', 'image', 'description')
         labels = {
             'name': 'Название',
             'content': 'Курс',
+            'image': 'Обложка',
+            'description': 'Краткое описание',
         }
 
     def __init__(self, *args, **kwargs):
@@ -27,6 +29,12 @@ class CourseUpdateForm(CourseCreateForm):
     class Meta:
         model = Course
         fields = CourseCreateForm.Meta.fields
+        labels = {
+            'name': 'Название',
+            'content': 'Курс',
+            'image': 'Обложка',
+            'description': 'Краткое описание',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
