@@ -1,10 +1,6 @@
 {% extends 'page1/base.html' %}
 {% block title %}Регистрация{% endblock %}
 
-{% block logo %}
-<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'hello_page' %}">RepetBuddy</a>
-{% endblock %}
-
 
 {% block content %}
 <div class="container mt-5">
@@ -27,18 +23,6 @@
 
             <form method="post">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label class="source-sans-pro" for="last_name">Фамилия:</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name">
-                </div>
-                <div class="mb-3">
-                    <label class="source-sans-pro" for="first_name">Имя:</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name">
-                </div>
-                <div class="mb-3">
-                    <label class="source-sans-pro" for="patronymic">Отчество:</label>
-                    <input type="text" class="form-control" id="patronymic" name="patronymic">
-                </div>
                 <div class="mb-3">
                     <label class="source-sans-pro" for="username">Никнейм:</label>
                     <input type="text" class="form-control" id="username" name="username">

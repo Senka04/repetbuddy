@@ -4,17 +4,11 @@
 repetbuddy.ru
 {% endblock %}
 
-{% block logo %}
-<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'home' %}">RepetBuddy</a>
-{% endblock %}
 
 {% block styles %}
 <style>
 
-.form-control:focus {
-    border-color: lightgreen;
-    box-shadow: 0 0 12px lightgreen;
-}
+
 .border-success {
     border-color: lightgreen !important;
 }
@@ -27,23 +21,15 @@ repetbuddy.ru
 {% endblock %}
 
 {% block content %}
-<form class="d-flex" action="{% url 'search' %}" method="get">
-    <input class="form-control me-4 mx-4" name="search_query" style="width: 300px;" type="search"
-           placeholder="Можете написать ФИО репетитора" aria-label="Search">
-    <input class="form-control me-4 mx-4" name="subject" style="width: 300px;" type="search"
-           placeholder="Все предметы" aria-label="Search">
-    <button class="btn btn-outline-success me-4 mx-0" type="submit">Найти</button>
-</form>
-
 <div class="container my-4">
-    {% if user_obj %}
+    {% if obj %}
     <div class="row" data-masonry='{"percentPosition": true }'>
-        {% for user in user_obj %}
+        {% for course in obj %}
         <div class="col-sm-6 col-lg-3 mb-4">
             <div class="post-masonry card border-success mb-3" style="max-width: 18rem;">
-                <a href="{% url 'tutor_info' user.user_id %}" class="card-link text-dark text-decoration-none">
+                <a href="{% url 'course_read' course.uuid %}" class="card-link text-dark text-decoration-none">
                     <div class="card-body">
-                        <h1 class="card-title">{{ user.last_name|capfirst }} {{ user.first_name|capfirst }} {{ user.patronymic|capfirst }}</h1>
+                        <h1 class="card-title">{{ course.name }} </h1>
                     </div>
                 </a>
             </div>
@@ -51,9 +37,7 @@ repetbuddy.ru
         {% endfor %}
     </div>
     {% else %}
-    <div class="container">
-        <h3>Нет результатов</h3>
-    </div>
+
     {% endif %}
 </div>
 {% endblock %}

@@ -3,9 +3,7 @@
 repetbuddy.ru
 {% endblock %}
 
-{% block logo %}
-<a class="w-100 navbar-brand mb-0 h1 russo-one" href="{% url 'hello_page' %}">RepetBuddy</a>
-{% endblock %}
+
 
 {% block styles %}
 <style>
@@ -22,33 +20,72 @@ repetbuddy.ru
 #myElement {
     transition: opacity 1s ease;
   }
-.form-control:focus {
-    border-color: lightgreen;
-    box-shadow: 0 0 12px lightgreen;
-}
+
 .border-success {
     border-color: lightgreen !important;
 }
 .border-success:hover {
      box-shadow: 0 0 12px lightgreen;
 }
-
+.bg-lightgrey {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #d3d3d330;
+    z-index: -1;
+}
 </style>
 
 {% endblock %}
 
 {% block content %}
-<div id="myElement" class="my-gradient">
+<div class="bg-lightgrey">
 </div>
-<form class="d-flex" action="{% url 'search' %}" method="get">
-    <input class="form-control me-4 mx-4" name="search_query" style="width: 300px;" type="search"
-           placeholder="Можете написать ФИО репетитора" aria-label="Search">
-    <input class="form-control me-4 mx-4" name="subject" style="width: 300px;" type="search"
-           placeholder="Все предметы" aria-label="Search">
-    <button class="btn btn-outline-success me-4 mx-0" type="submit">Найти</button>
-</form>
-<div style="height: 2000px;"></div>
-<p>Текст внизу страницы</p>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 p-0">
+      <img src="media/uploads/previews/banner1.png" class="img-fluid" style="height: 50vh; width:100%">
+    </div>
+  </div>
+</div>
+<br>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 p-0">
+      <img src="media/uploads/previews/banner2.png" class="img-fluid" style="height: 25vh; width:100%">
+    </div>
+  </div>
+</div>
+<br>
+
+<div class="container-fluid">
+  {% for card in cards %}
+    {% if forloop.counter0|divisibleby:3 %}
+      <div class="row">
+    {% endif %}
+    <div class="col-sm-4">
+      <div class="card">
+        {% if card.image %}
+          <img src="{{ card.image }}" class="card-img-top" alt="{{ card.name }}">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ card.name }}</h5>
+          {% if card.description %}
+            <p class="card-text">{{ card.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <br>
+    </div>
+    {% if forloop.counter|divisibleby:3 or forloop.last %}
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
 
 {% endblock %}
 

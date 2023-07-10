@@ -8,7 +8,9 @@
     <title>{% block title %}{% endblock %}</title>
     {% block links %}
     {% endblock %}
-
+    <!-- Подключение шрифта FontAwesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <!-- Подключение CSS-файла Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -23,6 +25,45 @@
     .source-sans-pro {
         font-family: 'Source Sans Pro', sans-serif;
     }
+    .form-control.search-form {
+        border: 0.5px solid pink;
+    }
+    .form-control:focus {
+        border: 0.5px solid pink;
+        box-shadow: 0 0 0px;
+    }
+    .search-color {
+        background-color: pink;
+        border: 0.5px solid pink;
+        border-left: 0px;
+    }
+
+    .search-color i {
+        color: white;
+    }
+
+    .search-color:hover {
+        border: 0.5px solid pink;
+        background-color: white;
+        border-left: 0px;
+    }
+
+    .search-color:hover i {
+        color: pink;
+    }
+
+    .search-color:active{
+        border: 0.5px solid pink !important;
+        border-left: 0px !important;
+    }
+
+    .my-text {
+        text-decoration: underline;
+        text-decoration-color: pink;
+        font-size: 24px;
+    }
+
+
     </style>
 
 
@@ -30,28 +71,37 @@
 <body>
 
 
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
     <div class="container-fluid">
-        {% block logo %} {% endblock %}
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarReg"
-                aria-controls="navbarReg" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarReg">
-            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link active source-sans-pro" href="{% url 'confirm_logout' %}">Выйти</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link active source-sans-pro" aria-current="page" href="{% url 'register' %}">Регистрация</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link source-sans-pro" href="{% url 'login' %}">Вход</a>
-                </li>
-                {% endif %}
-            </ul>
+        <a class="my-text navbar-brand source-sans-pro" href="{% url 'home' %}">skillgeek</a>
+        <div class="d-flex">
+            <form class="form-inline" action="{% url 'search' %}" method="get">
+                <div class="input-group">
+                    <input class="form-control search-form" name="search_info" type="text" placeholder="Поиск"
+                           aria-label="Search">
+                    <button class="btn search-color" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            <div class="collapse navbar-collapse" id="navbarReg">
+                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link active source-sans-pro" href="{% url 'confirm_logout' %}">Выйти</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link active source-sans-pro" aria-current="page" href="{% url 'register' %}">Регистрация</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link source-sans-pro" href="{% url 'login' %}">Вход</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarReg"
+                    aria-controls="navbarReg" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </div>
 </nav>

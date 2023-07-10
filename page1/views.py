@@ -1,7 +1,7 @@
 import uuid
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Video, TutorProfile, Course
+from .models import Video, TutorProfile, Course, UserProfile
 from .services import open_file
 from .forms import RegistrationForm, CourseCreateForm, CourseUpdateForm
 from django.contrib.auth import authenticate, login, logout
@@ -75,51 +75,50 @@ def register(request):
     return render(request, 'page1/registration/register.html', {'form': form})
 @login_required
 def tutor_main(request):
-    return render(request, 'page1/tutor_main.html')  # представляем, что мы уже в templates
+    try:
+        tutor_profile = TutorProfile.objects.get(username=request.user)
+        if tutor_profile:
+            return render(request, 'page1/tutor_main.html')  # представляем, что мы уже в templates
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
+
 
 @login_required
 def user_main(request):
-    return render(request, 'page1/user_main.html')  # представляем, что мы уже в templates
+    try:
+        user_profile = UserProfile.objects.get(username=request.user)
+        if user_profile:
+            return render(request, 'page1/user_main.html')  # представляем, что мы уже в templates
+    except UserProfile.DoesNotExist:
+        return redirect('home_tutor')
+
+
 
 
 def hello_page(request):
-    return render(request, 'page1/hello_page.html')
+    cards = Course.objects.filter()
+    return render(request, 'page1/hello_page.html', {'cards': cards})
 
 
-def search(request, query="", subject=""):
-    query = request.GET.get('search_query')
-    subject = request.GET.get('subject')
-    name_parts = query.split()
-    user_obj = TutorProfile.objects
-    if query != "" and subject == "":
-        for part in name_parts:
-            part = part.replace('ё', 'е')
-            user_obj = user_obj.filter(
-                Q(first_name__iexact=part.lower()) |
-                Q(last_name__iexact=part.lower()) |
-                Q(patronymic__iexact=part.lower())
-            )
-    elif query == "" and subject != "":
-        user_obj = TutorProfile.objects.filter(discipline__contains=subject.lower())
-    elif query != "" and subject != "":
-        for part in name_parts:
-            part = part.replace('ё', 'е')
-            user_obj = user_obj.filter(
-                Q(first_name__iexact=part.lower()) |
-                Q(last_name__iexact=part.lower()) |
-                Q(patronymic__iexact=part.lower())
-            )
-        user_obj = user_obj.filter(discipline__contains=subject.lower())
-    elif query == "" and subject == "":
-        user_obj = TutorProfile.objects.none()
-    params = {'user_obj': user_obj}
+def search(request):
+    search_info = request.GET.get('search_info')
+    if search:
+        obj = Course.objects.filter(
+            Q(name__icontains=search_info) |
+            Q(description__icontains=search_info)
+        )
+    else:
+        obj = Course.objects.none()
+    params = {'obj': obj}
     return render(request, 'page1/search.html', params)
 
 
 def gohome(request):
+    if not request.user.is_authenticated:
+        return redirect('hello_page')
     try:
         tutor_profile = TutorProfile.objects.get(username=request.user)
-        if tutor_profile.is_tutor:
+        if tutor_profile:
             return redirect('home_tutor')
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
@@ -127,60 +126,93 @@ def gohome(request):
 
 @login_required
 def courses(request):
-    course_list = Course.objects.filter(author=request.user)
-    return render(request, 'page1/courses.html', {'course_list': course_list})
+    try:
+        tutor_profile = TutorProfile.objects.get(username=request.user)
+        if tutor_profile:
+            course_list = Course.objects.filter(author=request.user)
+            return render(request, 'page1/courses.html', {'course_list': course_list})
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
 
 
 @login_required
 def course_create(request):
-    form = CourseCreateForm()
-    return render(request, 'page1/course_create.html', {'form': form})
+    try:
+        tutor_profile = TutorProfile.objects.get(username=request.user)
+        if tutor_profile:
+            form = CourseCreateForm()
+            return render(request, 'page1/course_create.html', {'form': form})
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
+
 
 
 @login_required
 def course_create_post(request):
-    if request.method == 'POST':
-        form = CourseCreateForm(request.POST, request.FILES)
-        if form.is_valid():
-            course = form.save(commit=False)
-            course.author = request.user
-            course.uuid = uuid.uuid4()
-            course.save()
-            return redirect('courses')
-        else:
-            print("Form is not valid")  # Отладочное сообщение
-            print("Errors:", form.errors)  # Отладочное сообщение
-    else:
-        form = CourseCreateForm()
+    try:
+        tutor_profile = TutorProfile.objects.get(username=request.user)
+        if tutor_profile:
+            if request.method == 'POST':
+                form = CourseCreateForm(request.POST, request.FILES)
+                if form.is_valid():
+                    course = form.save(commit=False)
+                    course.author = request.user
+                    course.uuid = uuid.uuid4()
+                    course.save()
+                    return redirect('courses')
+                else:
+                    print("Form is not valid")  # Отладочное сообщение
+                    print("Errors:", form.errors)  # Отладочное сообщение
+            else:
+                form = CourseCreateForm()
 
-    return render(request, 'page1/course_create.html', {'form': form})
+            return render(request, 'page1/course_create.html', {'form': form})
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
+
 
 
 @login_required
 def course_update(request, pk: str):
-    course = get_object_or_404(Course, uuid=pk)
-    form = CourseUpdateForm(instance=course)
-    return render(request, 'page1/course_update.html', {'form': form, 'course': course})
+    try:
+        tutor_profile = TutorProfile.objects.get(username=request.user)
+        if tutor_profile:
+            course = get_object_or_404(Course, uuid=pk, author=request.user)
+            form = CourseUpdateForm(instance=course)
+            return render(request, 'page1/course_update.html', {'form': form, 'course': course})
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
 
 
 @login_required
 def course_update_post(request, pk: str):
-    course = get_object_or_404(Course, uuid=pk)
-    if request.method == 'POST':
-        form = CourseUpdateForm(request.POST, request.FILES, instance=course)
-        if form.is_valid():
-            form.save()
-            return redirect('courses')
-    else:
-        form = CourseUpdateForm(instance=course)
-    return render(request, 'page1/course_update.html', {'form': form, 'course': course})
+    try:
+        tutor_profile = TutorProfile.objects.get(username=request.user)
+        if tutor_profile:
+            course = get_object_or_404(Course, uuid=pk, author=request.user)
+            if request.method == 'POST':
+                form = CourseUpdateForm(request.POST, request.FILES, instance=course)
+                if form.is_valid():
+                    form.save()
+                    return redirect('courses')
+            else:
+                form = CourseUpdateForm(instance=course)
+            return render(request, 'page1/course_update.html', {'form': form, 'course': course})
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
+
 
 
 @login_required
 def delete_course(request, pk: str):
-    course = get_object_or_404(Course, uuid=pk)
-    course.delete()
-    return redirect('courses')
+    try:
+        tutor_profile = TutorProfile.objects.get(username=request.user)
+        if tutor_profile:
+            course = get_object_or_404(Course, uuid=pk, author=request.user)
+            course.delete()
+            return redirect('courses')
+    except TutorProfile.DoesNotExist:
+        return redirect('home_user')
 
 
 @login_required
@@ -189,7 +221,7 @@ def upload_video(request):
         tutor_profile = TutorProfile.objects.get(user=request.user)
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
-    if tutor_profile.is_tutor:
+    if tutor_profile:
         if request.method == 'POST':
             form = VideoForm(request.POST, request.FILES)
             if form.is_valid():
@@ -210,7 +242,7 @@ def confirm_delete_video(request, pk):
         tutor_profile = TutorProfile.objects.get(user=request.user)
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
-    if tutor_profile.is_tutor:
+    if tutor_profile:
         video = get_object_or_404(Video, pk=pk)
         if request.user == video.user:
             return render(request, 'page1/videopleer/confirm_delete_video.html', {'video': video})
@@ -222,7 +254,7 @@ def delete_video(request, pk):
         tutor_profile = TutorProfile.objects.get(user=request.user)
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
-    if tutor_profile.is_tutor:
+    if tutor_profile:
         video = get_object_or_404(Video, pk=pk)
         if request.user != video.user:
             messages.error(request, "You don't have permission to delete this video.")

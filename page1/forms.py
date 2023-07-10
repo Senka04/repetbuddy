@@ -8,11 +8,12 @@ from .models import Video, TutorProfile, UserProfile, Course
 class CourseCreateForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ('name', 'content', 'image', 'description')
+        fields = ('name', 'content', 'image', 'video', 'description')
         labels = {
             'name': 'Название',
             'content': 'Курс',
             'image': 'Обложка',
+            'video': 'Видео',
             'description': 'Краткое описание',
         }
 
@@ -33,6 +34,7 @@ class CourseUpdateForm(CourseCreateForm):
             'name': 'Название',
             'content': 'Курс',
             'image': 'Обложка',
+            'video': 'Видео',
             'description': 'Краткое описание',
         }
 
@@ -64,29 +66,18 @@ class VideoForm(forms.ModelForm):
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     username = forms.CharField(max_length=30, required=True)
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=30, required=True)
-    patronymic = forms.CharField(max_length=30, required=False)
     is_tutor = forms.BooleanField(required=False)
     discipline = forms.CharField(max_length=100, required=False)
     hourly_rate = forms.DecimalField(max_digits=6, decimal_places=2, required=False)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'patronymic', 'is_tutor',
+        fields = ['username', 'email', 'password1', 'password2', 'is_tutor',
                   'discipline', 'hourly_rate']
 
     def clean(self):
         cleaned_data = super().clean()
         self.errors.clear()
-
-        last_name = cleaned_data.get('last_name')
-        if not last_name:
-            self.add_error('last_name', 'Пожалуйста, введите фамилию.')
-
-        first_name = cleaned_data.get('first_name')
-        if not first_name:
-            self.add_error('first_name', 'Пожалуйста, введите имя.')
 
         username = cleaned_data.get('username')
         if not username:
@@ -127,19 +118,13 @@ class RegistrationForm(UserCreationForm):
                 user=user,
                 discipline=self.cleaned_data['discipline'].lower(),
                 hourly_rate=self.cleaned_data['hourly_rate'],
-                first_name=self.cleaned_data['first_name'].lower().replace('ё', 'е'),
-                last_name=self.cleaned_data['last_name'].lower().replace('ё', 'е'),
-                patronymic=self.cleaned_data['patronymic'].lower().replace('ё', 'е'),
                 email=self.cleaned_data['email'].lower(),
-                username=self.cleaned_data['username']
+                username=self.cleaned_data['username'],
             )
             tutor_profile.save()
         else:
             user_profile = UserProfile.objects.create(
                 user=user,
-                first_name=self.cleaned_data['first_name'].lower().replace('ё', 'е'),
-                last_name=self.cleaned_data['last_name'].lower().replace('ё', 'е'),
-                patronymic=self.cleaned_data['patronymic'].lower().replace('ё', 'е'),
                 email=self.cleaned_data['email'].lower(),
                 username=self.cleaned_data['username']
             )

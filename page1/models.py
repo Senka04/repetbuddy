@@ -17,9 +17,15 @@ class Course(models.Model):
         super().save(*args, **kwargs)
 
     name = models.CharField(max_length=100)
-    content = CKEditor5Field(verbose_name='Текст курса', config_name='extends')
+    content = CKEditor5Field(verbose_name='Текст курса', config_name='extends', blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
     image = models.ImageField(upload_to='uploads/previews/', null=True, blank=True)
+    video = models.FileField(
+        upload_to='uploads/videos/',
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        null=True,
+        blank=True
+    )
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -30,18 +36,12 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(null=True)
     username = models.CharField(max_length=30, null=True)
-    first_name = models.CharField(max_length=30, null=True)
-    last_name = models.CharField(max_length=30, null=True)
-    patronymic = models.CharField(max_length=30, null=True)
     # Добавьте другие поля для профиля пользователя
 
 class TutorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(null=True)
     username = models.CharField(max_length=30, null=True)
-    first_name = models.CharField(max_length=30, null=True)
-    last_name = models.CharField(max_length=30, null=True)
-    patronymic = models.CharField(max_length=30, null=True)
     discipline = models.CharField(max_length=50)
     hourly_rate = models.DecimalField(max_digits=6, decimal_places=2)
 
