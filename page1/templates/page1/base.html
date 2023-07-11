@@ -27,36 +27,40 @@
         font-family: 'Source Sans Pro', sans-serif;
     }
     .form-control.search-form {
+        margin-right: 10px;
         border-radius: 10px 0px 0px 10px;
         border-right: 0px !important;
         border: 0.5px solid pink;
+        padding: 6px;
     }
     .form-control:focus {
         border: 0.5px solid pink;
         box-shadow: 0 0 0px;
     }
-    .search-color {
+    .search-button {
+        margin-right: 10px;
         border-radius: 0px 10px 10px 0px;
         border: 0.5px solid pink;
         border-left: 0px;
         background-color: pink;
+        padding-bottom: 6px;
     }
 
-    .search-color i {
+    .search-button i {
         color: white;
     }
 
-    .search-color:hover {
+    .search-button:hover {
         border: 0.5px solid pink;
         border-left: 0px;
         background-color: white;
     }
 
-    .search-color:hover i {
+    .search-button:hover i {
         color: pink;
     }
 
-    .search-color:active{
+    .search-button:active{
         border: 0.5px solid pink !important;
         border-left: 0px !important;
     }
@@ -70,6 +74,35 @@
     .footer-color {
         background-color: #d3d3d330;
     }
+    .link-footer, .link-navigate {
+      text-decoration: none;
+    }
+
+    .link-footer:hover, .link-navigate:hover {
+      text-decoration: underline;
+    }
+    .logo {
+        width: 20px;
+        height: 20px;
+    }
+    .logo-big {
+        width: 25px;
+        height: 25px;
+    }
+    .login-button, .logout-button, .navigation-button {
+        padding: 6px;
+        border: 0.5px solid pink;
+        background-color: pink;
+        border-radius: 10px;
+    }
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 20px;
+    }
+
+
+
 
     </style>
 
@@ -81,6 +114,7 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
     <div class="container-fluid">
         <a class="my-text navbar-brand source-sans-pro" href="{% url 'home' %}">skillgeek</a>
+        <button class="source-sans-pro navigation-button" id="nav-toggle">Каталог курсов</button>
         <div class="d-flex">
             <form class="form-inline" action="{% url 'search' %}" method="get">
                 <div class="d-flex">
@@ -89,30 +123,21 @@
                                aria-label="Search">
                     </div>
                     <div class="d-inline-block">
-                        <button class="btn search-color" type="submit"><i class="fas fa-search"></i></button>
+                        <button class="btn search-button" type="submit"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
             </form>
-            <div class="collapse navbar-collapse" id="navbarReg">
-                <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link active source-sans-pro" href="{% url 'confirm_logout' %}">Выйти</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link active source-sans-pro" aria-current="page" href="{% url 'register' %}">Регистрация</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link source-sans-pro" href="{% url 'login' %}">Вход</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarReg"
-                    aria-controls="navbarReg" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link source-sans-pro logout-button" href="{% url 'confirm_logout' %}">Выйти</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link source-sans-pro login-button" href="{% url 'login' %}">Войти</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>
@@ -120,6 +145,16 @@
 <br>
 <br>
 {% block content %} {% endblock %}
+<div id="nav-menu" class="card" style="display: none; position: fixed; top: 50px; left: 460px; z-index: 9999;">
+    <ul class="list-unstyled">
+        <li><a class="text-dark link-navigate" href="#">IT-курсы</a></li>
+        <li><a class="text-dark link-navigate" href="#">Дизайн</a></li>
+        <li><a class="text-dark link-navigate" href="#">Маркетинг</a></li>
+        <li><a class="text-dark link-navigate" href="#">Финансы</a></li>
+        <li><a class="text-dark link-navigate" href="#">Аналитика</a></li>
+        <li><a class="text-dark link-navigate" href="#">3D-разработка</a></li>
+    </ul>
+</div>
 <footer class="footer-color p-5">
     <div class="container p-4">
         <div class="row">
@@ -185,6 +220,42 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
         integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
         crossorigin="anonymous"></script>
+<script>
+    var newCard;
+
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+        var navMenu = document.getElementById('nav-menu');
+        if (navMenu.style.display === 'none') {
+            navMenu.style.display = 'block';
+        } else {
+            navMenu.style.display = 'none';
+            if (newCard) {
+                newCard.remove();
+                newCard = null;
+            }
+        }
+    });
+
+    var links = document.querySelectorAll('.link-navigate');
+    links.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (newCard) {
+                newCard.remove();
+                newCard = null;
+            }
+            newCard = document.createElement('div');
+            newCard.classList.add('card');
+            newCard.style.position = 'fixed';
+            newCard.style.top = '50px';
+            newCard.style.left = 'calc(460px + ' + (document.getElementById('nav-menu').offsetWidth + 5) + 'px)';
+            newCard.style.width = document.getElementById('nav-menu').offsetWidth + 'px';
+            newCard.style.zIndex = '9999';
+            newCard.innerHTML = '<p>Новая карточка</p>';
+            document.body.appendChild(newCard);
+        });
+    });
+</script>
 
 </body>
 </html>

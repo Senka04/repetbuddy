@@ -26,38 +26,27 @@ repetbuddy.ru
 .border-success:hover {
      box-shadow: 0 0 12px lightgreen;
 }
-
-.link-footer {
-  text-decoration: none;
+.space {
+    margin-right: 100px !important;
 }
-
-.link-footer:hover {
-  text-decoration: underline;
-}
-.logo {
-width: 20px;
-height: 20px;
-}
-.logo-big {
-width: 25px;
-height: 25px;
-}
-
-
-
-
-
-
-
 </style>
 
 {% endblock %}
 
 {% block content %}
+<div class="container-fluid d-flex justify-content-center">
+        <ul class="list-inline d-inline-block mb-0 text-nowrap">
+            <li class="list-inline-item space"><a href="/it-courses" class="text-dark link-footer">IT-курсы</a></li>
+            <li class="list-inline-item space"><a href="/marketing" class="text-dark link-footer">Маркетинг</a></li>
+            <li class="list-inline-item space"><a href="/design" class="text-dark link-footer">Дизайн</a></li>
+            <li class="list-inline-item space"><a href="/finance" class="text-dark link-footer">Финансы</a></li>
+            <li class="list-inline-item"><a href="/analytics" class="text-dark link-footer">Аналитика</a></li>
+        </ul>
+</div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 p-0">
-            <img src="media/uploads/previews/banner1.png" class="img-fluid" style="height: 50vh; width:100%">
+            <img src="media/uploads/previews/banner1.png" class="img-fluid" style="height: 40vh; width:100%">
         </div>
     </div>
 </div>
@@ -107,6 +96,7 @@ window.addEventListener('scroll', function() {
   var opacity = Math.max(0, 0.5 - (scrollTop / height)*1.5);
   element.style.opacity = opacity;
 });
+
 
 </script>
 {% endblock %}
