@@ -26,6 +26,8 @@
         font-family: 'Source Sans Pro', sans-serif;
     }
     .form-control.search-form {
+        border-radius: 10px 0px 0px 10px;
+        border-right: 0px !important;
         border: 0.5px solid pink;
     }
     .form-control:focus {
@@ -33,9 +35,10 @@
         box-shadow: 0 0 0px;
     }
     .search-color {
-        background-color: pink;
+        border-radius: 0px 10px 10px 0px;
         border: 0.5px solid pink;
         border-left: 0px;
+        background-color: pink;
     }
 
     .search-color i {
@@ -44,8 +47,8 @@
 
     .search-color:hover {
         border: 0.5px solid pink;
-        background-color: white;
         border-left: 0px;
+        background-color: white;
     }
 
     .search-color:hover i {
@@ -64,6 +67,7 @@
     }
 
 
+
     </style>
 
 
@@ -76,10 +80,14 @@
         <a class="my-text navbar-brand source-sans-pro" href="{% url 'home' %}">skillgeek</a>
         <div class="d-flex">
             <form class="form-inline" action="{% url 'search' %}" method="get">
-                <div class="input-group">
-                    <input class="form-control search-form" name="search_info" type="text" placeholder="Поиск"
+                <div class="d-flex">
+                    <div class="d-inline-block">
+                        <input class="form-control search-form" name="search_info" type="text" placeholder="Поиск"
                            aria-label="Search">
-                    <button class="btn search-color" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="d-inline-block">
+                        <button class="btn search-color" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
                 </div>
             </form>
             <div class="collapse navbar-collapse" id="navbarReg">

@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
-from django.db.models import Q
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 def course_read(request, pk: str):
     # Получаем отформатированный текст из базы данных
@@ -102,15 +102,17 @@ def hello_page(request):
 
 def search(request):
     search_info = request.GET.get('search_info')
-    if search:
-        obj = Course.objects.filter(
-            Q(name__icontains=search_info) |
-            Q(description__icontains=search_info)
-        )
+    if search_info:
+        vector = SearchVector('name', 'description')
+        query = SearchQuery(search_info)
+        rank = SearchRank(vector, query)
+        obj = Course.objects.annotate(rank=rank, search=vector).filter(search=query).order_by('-rank')
     else:
         obj = Course.objects.none()
     params = {'obj': obj}
     return render(request, 'page1/search.html', params)
+
+
 
 
 def gohome(request):
