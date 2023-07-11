@@ -4,7 +4,6 @@ repetbuddy.ru
 {% endblock %}
 
 
-
 {% block styles %}
 <style>
 .my-gradient {
@@ -27,65 +26,75 @@ repetbuddy.ru
 .border-success:hover {
      box-shadow: 0 0 12px lightgreen;
 }
-.bg-lightgrey {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #d3d3d330;
-    z-index: -1;
+
+.link-footer {
+  text-decoration: none;
 }
+
+.link-footer:hover {
+  text-decoration: underline;
+}
+.logo {
+width: 20px;
+height: 20px;
+}
+.logo-big {
+width: 25px;
+height: 25px;
+}
+
+
+
+
+
+
+
 </style>
 
 {% endblock %}
 
 {% block content %}
-<div class="bg-lightgrey">
-</div>
-
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-12 p-0">
-      <img src="media/uploads/previews/banner1.png" class="img-fluid" style="height: 50vh; width:100%">
-    </div>
-  </div>
-</div>
-<br>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12 p-0">
-      <img src="media/uploads/previews/banner2.png" class="img-fluid" style="height: 25vh; width:100%">
-    </div>
-  </div>
-</div>
-<br>
-
-<div class="container-fluid">
-  {% for card in cards %}
-    {% if forloop.counter0|divisibleby:3 %}
-      <div class="row">
-    {% endif %}
-    <div class="col-sm-4">
-      <div class="card">
-        {% if card.image %}
-          <img src="{{ card.image }}" class="card-img-top" alt="{{ card.name }}">
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{ card.name }}</h5>
-          {% if card.description %}
-            <p class="card-text">{{ card.description }}</p>
-          {% endif %}
+    <div class="row">
+        <div class="col-12 p-0">
+            <img src="media/uploads/previews/banner1.png" class="img-fluid" style="height: 50vh; width:100%">
         </div>
-      </div>
-      <br>
     </div>
-    {% if forloop.counter|divisibleby:3 or forloop.last %}
-      </div>
-    {% endif %}
-  {% endfor %}
 </div>
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 p-0">
+            <img src="media/uploads/previews/banner2.png" class="img-fluid" style="height: 25vh; width:100%">
+        </div>
+    </div>
+</div>
+<br>
 
+<div class="container-fluid">
+    {% for card in cards %}
+    {% if forloop.counter0|divisibleby:3 %}
+    <div class="row">
+        {% endif %}
+        <div class="col-sm-4">
+            <div class="card">
+                {% if card.image %}
+                <img src="{{ card.image }}" class="card-img-top" alt="{{ card.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ card.name }}</h5>
+                    {% if card.description %}
+                    <p class="card-text">{{ card.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <br>
+        </div>
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
 
 {% endblock %}
 

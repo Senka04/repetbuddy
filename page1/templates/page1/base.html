@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>{% block title %}{% endblock %}</title>
     {% block links %}
     {% endblock %}
@@ -66,7 +67,9 @@
         font-size: 24px;
     }
 
-
+    .footer-color {
+        background-color: #d3d3d330;
+    }
 
     </style>
 
@@ -83,7 +86,7 @@
                 <div class="d-flex">
                     <div class="d-inline-block">
                         <input class="form-control search-form" name="search_info" type="text" placeholder="Поиск"
-                           aria-label="Search">
+                               aria-label="Search">
                     </div>
                     <div class="d-inline-block">
                         <button class="btn search-color" type="submit"><i class="fas fa-search"></i></button>
@@ -117,6 +120,64 @@
 <br>
 <br>
 {% block content %} {% endblock %}
+<footer class="footer-color p-5">
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <ul class="list-inline d-inline-block mb-0 text-nowrap">
+                    <li class="list-inline-item"><a class="my-text navbar-brand source-sans-pro"
+                                                    href="{% url 'home' %}">skillgeek</a></li>
+                    <li class="list-inline-item"><a href="/it-courses" class="text-dark link-footer">IT-курсы</a></li>
+                    <li class="list-inline-item"><a href="/marketing" class="text-dark link-footer">Маркетинг</a></li>
+                    <li class="list-inline-item"><a href="/design" class="text-dark link-footer">Дизайн</a></li>
+                    <li class="list-inline-item"><a href="/finance" class="text-dark link-footer">Финансы</a></li>
+                    <li class="list-inline-item"><a href="/analytics" class="text-dark link-footer">Аналитика</a></li>
+                </ul>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6">
+                <h5>skillgeek</h5>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="/about" class="text-dark link-footer">О компании</a></li>
+                    <li><a href="/jobs" class="text-dark link-footer">Вакансии</a></li>
+                    <li><a href="/requisites" class="text-dark link-footer">Реквизиты</a></li>
+                </ul>
+                <br>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <h5 class="text-nowrap">Зарабатывать с skillgeek</h5>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="/partnership" class="text-dark link-footer">Стать партнером</a></li>
+                </ul>
+                <br>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <h5 class="text-nowrap">Покупать как компания</h5>
+                <ul class="list-unstyled mb-0">
+                </ul>
+                <br>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        © skillgeek, 2023. Все права защищены.
+        <ul class="list-inline">
+            <li class="list-inline-item"><a class="text-dark link-footer" href="https://vk.com"><img class="logo"
+                                                                                                     src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/TfKk/QGyS93cW7/PNG%20-%20digital/VK%20Logo.png"
+                                                                                                     alt="VK"></a></li>
+            <li class="list-inline-item"><a class="text-dark link-footer" href="https://ok.ru"><img class="logo-big"
+                                                                                                    src="https://img.icons8.com/?size=512&id=19622&format=png"
+                                                                                                    alt="Одноклассники"></a>
+            </li>
+            <li class="list-inline-item"><a class="text-dark link-footer" href="https://t.me"><img class="logo-big"
+                                                                                                   src="https://img.icons8.com/?size=512&id=oWiuH0jFiU0R&format=png"
+                                                                                                   alt="Telegram"></a>
+            </li>
+        </ul>
+    </div>
+</footer>
 {% block scripts %} {% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"

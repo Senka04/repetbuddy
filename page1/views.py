@@ -12,11 +12,13 @@ from django.contrib import messages
 from .forms import VideoForm
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
+
 def course_read(request, pk: str):
     # Получаем отформатированный текст из базы данных
     course = Course.objects.get(uuid=pk)
     content = course.content
     return render(request, 'page1/course_read.html', {'content': content})
+
 
 def tutor_info(request, user_id: int):
     tutor = TutorProfile.objects.get(user_id=user_id)
@@ -93,8 +95,6 @@ def user_main(request):
         return redirect('home_tutor')
 
 
-
-
 def hello_page(request):
     cards = Course.objects.filter()
     return render(request, 'page1/hello_page.html', {'cards': cards})
@@ -111,8 +111,6 @@ def search(request):
         obj = Course.objects.none()
     params = {'obj': obj}
     return render(request, 'page1/search.html', params)
-
-
 
 
 def gohome(request):
@@ -148,7 +146,6 @@ def course_create(request):
         return redirect('home_user')
 
 
-
 @login_required
 def course_create_post(request):
     try:
@@ -171,7 +168,6 @@ def course_create_post(request):
             return render(request, 'page1/course_create.html', {'form': form})
     except TutorProfile.DoesNotExist:
         return redirect('home_user')
-
 
 
 @login_required
