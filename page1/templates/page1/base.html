@@ -29,41 +29,45 @@
     .form-control.search-form {
         border-radius: 10px 0px 0px 10px;
         border-right: 0px !important;
-        border: 0.5px solid pink;
+        border: 0.5px solid #97dad5;
+    }
+    .form-control.search-form::placeholder {
+        color: #1c1c1c;
     }
     .form-control:focus {
-        border: 0.5px solid pink;
+        border: 0.5px solid #97dad5;
         box-shadow: 0 0 0px;
     }
     .search-button {
         border-radius: 0px 10px 10px 0px;
-        border: 0.5px solid pink;
+        border: 0.5px solid #97dad5;
         border-left: 0px;
-        background-color: pink;
+        background-color: #97dad5;
     }
 
     .search-button i {
-        color: white;
+        color: #1c1c1c;
     }
 
     .search-button:hover {
-        border: 0.5px solid pink;
+        border: 0.5px solid #97dad5;
         border-left: 0px;
         background-color: white;
     }
 
     .search-button:hover i {
-        color: pink;
+        color: #1c1c1c;
     }
 
-    .search-button:active{
-        border: 0.5px solid pink !important;
+    .search-button:active {
+        border: 0.5px solid #97dad5 !important;
         border-left: 0px !important;
     }
 
     .my-text {
+        color: #1c1c1c;
         text-decoration: underline;
-        text-decoration-color: pink;
+        text-decoration-color: #97dad5;
         font-size: 24px;
     }
 
@@ -86,14 +90,14 @@
         height: 25px;
     }
     .login-button, .logout-button {
-        border: 0.5px solid pink;
-        background-color: pink;
+        border: 0.5px solid #97dad5;
+        background-color: #97dad5;
         border-radius: 10px;
     }
 
     .navigation-button {
-        border: 0.5px solid pink;
-        background-color: pink;
+        border: 0.5px solid #97dad5;
+        background-color: #97dad5;
         border-radius: 10px;
     }
 
@@ -104,18 +108,22 @@
         left: 50px;
         z-index: 9999;
     }
-
-    .cards-container .card1 {
-        padding: 6px;
-        margin-right: 5px;
-        width: 150px;
+    .cards-container .card {
+        background-color: #97dad5;
+        height: 500px;
     }
-    .cards-container .card2 {
+
+    .card1 {
         padding: 6px;
         margin-right: 5px;
         width: 200px;
     }
-    .cards-container .card3 {
+    .card2 {
+        padding: 6px;
+        margin-right: 5px;
+        width: 250px;
+    }
+    .card3 {
         padding: 6px;
         margin-right: 5px;
         width: 300px;
@@ -134,6 +142,7 @@
         flex: 1;
     }
     .navigation-button {
+        color: #1c1c1c;
         flex: 2;
     }
 
@@ -143,9 +152,11 @@
     }
 
     .logout-button {
+        color: #1c1c1c;
         flex: 1;
     }
     .login-button {
+        color: #1c1c1c;
         flex: 1;
     }
 
@@ -163,6 +174,8 @@
 
 
 
+
+
     </style>
 
 
@@ -172,7 +185,7 @@
     <a class="my-text navbar-brand source-sans-pro" href="{% url 'home' %}">skillgeek</a>
     <button class="source-sans-pro navigation-button" id="nav-toggle">Каталог курсов</button>
     <form class="form-inline" action="{% url 'search' %}" method="get">
-        <input class="form-control search-form" name="search_info" type="text" placeholder="Поиск"
+        <input class="source-sans-pro form-control search-form" name="search_info" type="text" placeholder="Поиск..."
                aria-label="Search">
         <button class="btn search-button" type="submit"><i class="fas fa-search"></i></button>
     </form>
@@ -189,61 +202,41 @@
 <div class="cards-container">
     <div class="card card1">
         <ul class="list-unstyled">
-            <li><a class="text-dark link-navigate" href="#" data-target="it-courses">IT-курсы</a></li>
-            <li><a class="text-dark link-navigate" href="#" data-target="design">Дизайн</a></li>
-            <li><a class="text-dark link-navigate" href="#" data-target="marketing">Маркетинг</a></li>
-            <li><a class="text-dark link-navigate" href="#" data-target="finance">Финансы</a></li>
-            <li><a class="text-dark link-navigate" href="#" data-target="analytics">Аналитика</a></li>
-            <li><a class="text-dark link-navigate" href="#" data-target="3d-development">3D-разработка</a></li>
+            {% for category in categories %}
+            <li><a class="text-dark source-sans-pro link-navigate" href="#" data-target="{{ category.name|slugify }}">
+                {{ category.name }}</a></li>
+            {% endfor %}
         </ul>
     </div>
     <div class="card card2">
-        <div id="it-courses" class="sub-menu">
+        {% for category in categories %}
+        <div id="{{ category.name|slugify }}" class="sub-menu">
             <ul class="list-unstyled">
-                <li><a class="text-dark link-navigate" href="#" data-target="python">Python</a></li>
-                <li><a class="text-dark link-navigate" href="#" data-target="cpp">C++</a></li>
-                <li><a class="text-dark link-navigate" href="#" data-target="javascript">JavaScript</a></li>
+                {% for subcategory in subcategories %}
+                {% if subcategory.category == category %}
+                <li><a class="text-dark source-sans-pro link-navigate" href="#"
+                       data-target="{{ subcategory.name|slugify }}">{{ subcategory.name }}</a></li>
+                {% endif %}
+                {% endfor %}
             </ul>
         </div>
-        <div id="design" class="sub-menu">
-            <ul class="list-unstyled">
-                <li><a class="text-dark link-navigate" href="#" data-target="photoshop">Adobe Photoshop</a></li>
-                <li><a class="text-dark link-navigate" href="#" data-target="illustrator">Adobe Illustrator</a></li>
-                <li><a class="text-dark link-navigate" href="#" data-target="revit">Revit</a></li>
-            </ul>
-        </div>
+        {% endfor %}
     </div>
     <div class="card card3">
-        <div id="python" class="sub-menu">
+        {% for subcategory in subcategories %}
+        <div id="{{ subcategory.name|slugify }}" class="sub-menu">
             <ul class="list-unstyled">
-                <li><a class="text-dark link-navigate" href="#">Python с 0 до Junior</a></li>
-                <li><a class="text-dark link-navigate" href="#">Python с 0 до Middle</a></li>
-                <li><a class="text-dark link-navigate" href="#">Python с 0 до Pro</a></li>
+                {% for subsubcategory in subsubcategories %}
+                {% if subsubcategory.subcategory == subcategory %}
+                <li><a class="text-dark source-sans-pro link-navigate" href="#">{{ subsubcategory.name }}</a></li>
+                {% endif %}
+                {% endfor %}
             </ul>
         </div>
-        <div id="cpp" class="sub-menu">
-            <ul class="list-unstyled">
-                <li><a class="text-dark link-navigate" href="#">С++ с 0 до Junior</a></li>
-                <li><a class="text-dark link-navigate" href="#">С++ с 0 до Middle</a></li>
-                <li><a class="text-dark link-navigate" href="#">С++ с 0 до Pro</a></li>
-            </ul>
-        </div>
-        <div id="javascript" class="sub-menu">
-            <ul class="list-unstyled">
-                <li><a class="text-dark link-navigate" href="#">JavaScript с 0 до Junior</a></li>
-                <li><a class="text-dark link-navigate" href="#">JavaScript с 0 до Middle</a></li>
-                <li><a class="text-dark link-navigate" href="#">JavaScript с 0 до Pro</a></li>
-            </ul>
-        </div>
-        <div id="photoshop" class="sub-menu">
-            <ul class="list-unstyled">
-                <li><a class="text-dark link-navigate" href="#">Photoshop для фотографов</a></li>
-                <li><a class="text-dark link-navigate" href="#">Photoshop для себя</a></li>
-                <li><a class="text-dark link-navigate" href="#">Photoshop для рекламы</a></li>
-            </ul>
-        </div>
+        {% endfor %}
     </div>
 </div>
+
 {% block content %} {% endblock %}
 <footer class="footer-color p-5">
     <div class="container p-4">
@@ -310,7 +303,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
         integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
         crossorigin="anonymous"></script>
+
 <script>
+// открыть или закрыть фильтр
 document.getElementById('nav-toggle').addEventListener('click', function() {
     var cardsContainer = document.querySelector('.cards-container');
     if (cardsContainer.style.display === 'flex') {
@@ -387,6 +382,7 @@ document.querySelectorAll('.card2 .link-navigate').forEach(function(link) {
         document.querySelector('#' + this.dataset.target).classList.add('active');
     });
 });
+
 
 </script>
 

@@ -24,7 +24,8 @@ def tutor_info(request, user_id: int):
     tutor = TutorProfile.objects.get(user_id=user_id)
     video_list = Video.objects.filter(user_id=user_id)
     course_list = Course.objects.filter(author=user_id)
-    return render(request, 'page1/tutor_info.html', {'tutor': tutor, 'video_list': video_list, 'course_list': course_list})
+    return render(request, 'page1/tutor_info.html',
+                  {'tutor': tutor, 'video_list': video_list, 'course_list': course_list})
 
 
 @login_required
@@ -75,6 +76,8 @@ def register(request):
         form = RegistrationForm()
 
     return render(request, 'page1/registration/register.html', {'form': form})
+
+
 @login_required
 def tutor_main(request):
     try:
@@ -200,7 +203,6 @@ def course_update_post(request, pk: str):
         return redirect('home_user')
 
 
-
 @login_required
 def delete_course(request, pk: str):
     try:
@@ -263,17 +265,14 @@ def delete_video(request, pk):
             return redirect('home_tutor')
 
 
-
 def get_list_video(request):
     video_list = Video.objects.filter(user=request.user)
     return render(request, 'page1/videopleer/home.html', {'video_list': video_list})
 
 
-
 def get_video(request, pk: str):
     _video = get_object_or_404(Video, uuid=pk)
     return render(request, "page1/videopleer/video.html", {"video": _video})
-
 
 
 def get_streaming_video(request, pk: str):
