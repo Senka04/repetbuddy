@@ -33,6 +33,10 @@ def confirm_logout(request):
     return render(request, 'page1/registration/confirm_logout.html')
 
 
+def from_filter(request, pk: str):
+    return render(request, 'page1/from_filter.html')
+
+
 @login_required
 def logout_view(request):
     if request.method == 'POST':
