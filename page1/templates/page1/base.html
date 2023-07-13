@@ -251,7 +251,7 @@
             <ul class="list-unstyled">
                 {% for subsubcategory in subsubcategories %}
                 {% if subsubcategory.subcategory == subcategory %}
-                <li><a class="source-sans-pro card3-link link-navigate" href="{% url 'from_filter' subsubcategory.name %}">{{ subsubcategory.name }}</a></li>
+                <li><a class="source-sans-pro card3-link link-navigate" href="{% url 'from_filter' subsubcategory.name|transliterate|slugify %}">{{ subsubcategory.name }}</a></li>
                 {% endif %}
                 {% endfor %}
             </ul>
