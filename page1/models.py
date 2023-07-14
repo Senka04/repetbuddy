@@ -6,6 +6,29 @@ import uuid
 from django.utils import timezone
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class Subcategory(models.Model):
+    name = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class SubSubcategory(models.Model):
+    name = models.CharField(max_length=255)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
 class Course(models.Model):
     uuid = models.UUIDField(unique=True, editable=False)
 

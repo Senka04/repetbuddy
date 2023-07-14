@@ -11,7 +11,7 @@ urlpatterns = [
     path('login', views.login_view, name='login'),
     path('confirm_logout', views.confirm_logout, name='confirm_logout'),
     path('logout', views.logout_view, name='logout'),
-    path('courses', views.courses, name='courses'),
+    path('my_courses', views.courses, name='courses'),
     path('course_create', views.course_create, name='course_create'),
     path('course_create_post', views.course_create_post, name='course_create_post'),
     path('course_update/<str:pk>/', views.course_update, name='course_update'),
@@ -26,4 +26,5 @@ urlpatterns = [
     path('home_video/<int:pk>/delete/', views.delete_video, name='delete_video'),
     path('home_video/<int:pk>/confirm_delete/', views.confirm_delete_video, name='confirm_delete_video'),
     path('course_update/<str:pk>/delete/', views.delete_course, name='delete_course'),
+    path('courses/<str:pk>/', views.from_filter, name='from_filter'),
 ]
