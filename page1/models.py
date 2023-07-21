@@ -39,7 +39,7 @@ class Course(models.Model):
             self.uuid = uuid.uuid5(uuid.NAMESPACE_DNS, data)
         super().save(*args, **kwargs)
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=26)
     content = CKEditor5Field(verbose_name='Текст курса', config_name='extends', blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
     image = models.ImageField(upload_to='uploads/previews/', null=True, blank=True)
