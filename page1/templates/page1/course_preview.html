@@ -1,0 +1,126 @@
+{% extends 'page1/base.html' %}
+{% load static %}
+
+{% block links %}
+<link rel="stylesheet" href="{% static '/django_ckeditor_5/dist/styles.css' %}">
+<link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
+<style>
+.video-card {
+    overflow: hidden;
+    width: auto;
+}
+
+.video-card::before {
+    content: "";
+    display: block;
+    padding-top: 56.25%;
+}
+
+.card-img-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.video-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+.video-js .vjs-big-play-button {
+        display: none;
+    }
+
+
+
+
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mt-3 mb-3">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h2>{{ course.name }}</h2>
+        </div>
+        <div class="{% if not course.file and not course.image %}col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12{% else %}d-none{% endif %} d-flex justify-content-end">
+            <a href="{% url 'tutor_info' course.author_id %}" type="button" class="btn btn-primary btn-lg" style="margin-right: 8px;">Другие
+                курсы и видео репетитора</a>
+            <a href="{% url 'course_read' course.uuid %}" type="button" class="btn btn-secondary btn-lg">Пройти курс</a>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        {% if course.file or course.image %}
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="card video-card">
+                <img class="card-img-top video-thumbnail" src="{{ course.image.url }}">
+                {% if course.file %}
+                <video
+                        class="video-js video-player"
+                        preload="auto"
+                        controls
+                        muted
+                        data-setup="{}"
+                >
+                    <source src="{% url 'stream_for_course' course.uuid %}" type="video/mp4"/>
+                    <source src="{% url 'stream_for_course' course.uuid %}" type="video/webm"/>
+                </video>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="{% if not course.file and not course.image %}d-none{% else %}col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12{% endif %}">
+            <a href="{% url 'tutor_info' course.author_id %}" type="button" class="btn btn-primary btn-lg">Другие
+                курсы и видео репетитора</a>
+            <a href="{% url 'course_read' course.uuid %}" type="button" class="btn btn-secondary btn-lg">Пройти курс</a>
+        </div>
+    </div>
+    <div class="row mt-3 mb-3">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <p style="font-size: 16px;">{{ course.description }}</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+<script>
+    // Найти все карточки видео на странице
+const videoCards = document.querySelectorAll('.video-card');
+
+// Добавить обработчики событий для каждой карточки
+videoCards.forEach(card => {
+    // Найти элементы видео и изображения внутри карточки
+    const video = card.querySelector('.video-player');
+    const thumbnail = card.querySelector('.video-thumbnail');
+
+    // Запустить видео и скрыть изображение при наведении курсора на карточку
+    card.addEventListener('mouseenter', () => {
+        video.classList.remove('d-none');
+        thumbnail.classList.add('d-none');
+        video.play();
+    });
+});
+
+
+
+
+
+</script>
+{% endblock %}

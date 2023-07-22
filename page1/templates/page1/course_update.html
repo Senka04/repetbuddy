@@ -1,5 +1,22 @@
 {% extends 'page1/base.html' %}
 
+{% block styles %}
+<style>
+#delete-button {
+    opacity: 0.3;
+}
+#delete-button:hover {
+    opacity: 1;
+}
+#confirm-delete {
+    opacity: 0.3;
+}
+#confirm-delete:hover {
+    opacity: 1;
+}
+</style>
+
+{% endblock %}
 
 {% block content %}
 <div class="card mb-3 border-0 nth-shadow">
@@ -12,8 +29,7 @@
                 <button type="submit" class="btn btn-dark">Обновить курс</button>
                 <!-- Кнопка удаления -->
                 <button type="button" class="btn btn-danger position-relative" data-course-uuid="{{ course.uuid }}"
-                        id="delete-button"
-                        style="opacity: 0.3;">Удалить курс
+                        id="delete-button">Удалить курс
                 </button>
             </div>
         </form>
@@ -86,11 +102,9 @@
             }
         });
     });
-
-
-
-
-
+</script>
+<!--Сохранение изменений в реальном времени-->
+<script>
 
 </script>
 {% endblock %}

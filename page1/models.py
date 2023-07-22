@@ -43,7 +43,7 @@ class Course(models.Model):
     content = CKEditor5Field(verbose_name='Текст курса', config_name='extends', blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
     image = models.ImageField(upload_to='uploads/previews/', null=True, blank=True)
-    video = models.FileField(
+    file = models.FileField(
         upload_to='uploads/videos/',
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
         null=True,

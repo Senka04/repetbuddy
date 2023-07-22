@@ -8,12 +8,12 @@ from .models import Video, TutorProfile, UserProfile, Course
 class CourseCreateForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ('name', 'content', 'image', 'video', 'description')
+        fields = ('name', 'content', 'image', 'file', 'description')
         labels = {
             'name': 'Название',
             'content': 'Курс',
             'image': 'Обложка',
-            'video': 'Видео',
+            'file': 'Видео',
             'description': 'Краткое описание',
         }
 
@@ -34,7 +34,7 @@ class CourseUpdateForm(CourseCreateForm):
             'name': 'Название',
             'content': 'Курс',
             'image': 'Обложка',
-            'video': 'Видео',
+            'file': 'Видео',
             'description': 'Краткое описание',
         }
 
@@ -110,6 +110,7 @@ class RegistrationForm(UserCreationForm):
             if not str(hourly_rate).isdigit():
                 self.add_error('hourly_rate', 'Почасовая ставка должна быть положительным целым числом.')
         return cleaned_data
+
     def save(self, commit=True):
         user = super().save(commit=True)
         user.set_password(self.cleaned_data['password1'])

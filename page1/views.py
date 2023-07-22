@@ -2,7 +2,7 @@ import uuid
 from django.http import StreamingHttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video, TutorProfile, Course, UserProfile
-from .services import open_file
+from .services import open_file, open_file_for_course
 from .forms import RegistrationForm, CourseCreateForm, CourseUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -11,6 +11,11 @@ from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+
+def course_preview(request, pk: str):
+    # Получаем отформатированный текст из базы данных
+    course = Course.objects.get(uuid=pk)
+    return render(request, 'page1/course_preview.html', {'course': course})
 
 
 def course_read(request, pk: str):
@@ -281,6 +286,16 @@ def get_video(request, pk: str):
 
 def get_streaming_video(request, pk: str):
     file, status_code, content_length, content_range = open_file(request, pk)
+    response = StreamingHttpResponse(file, status=status_code, content_type='video/mp4')
+    response['Accept-Ranges'] = 'bytes'
+    response['Content-Length'] = str(content_length)
+    response['Cache-Control'] = 'no-cache'
+    response['Content-Range'] = content_range
+    return response
+
+
+def get_streaming_video_for_course(request, pk: str):
+    file, status_code, content_length, content_range = open_file_for_course(request, pk)
     response = StreamingHttpResponse(file, status=status_code, content_type='video/mp4')
     response['Accept-Ranges'] = 'bytes'
     response['Content-Length'] = str(content_length)

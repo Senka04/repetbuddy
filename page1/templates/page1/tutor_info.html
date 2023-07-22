@@ -8,12 +8,12 @@
 
 {% block styles %}
 <style>
-.card {
+.video-card {
     overflow: hidden;
     width: 200px;
 }
 
-.card::before {
+.video-card::before {
     content: "";
     display: block;
     padding-top: 56.25%;
@@ -33,7 +33,7 @@
 }
 
 @media (max-width: 1050px) {
-  .card {
+  .video-card {
       width: 160px;
   }
   .mt-2 {
@@ -42,7 +42,7 @@
 }
 
 @media (max-width: 800px) {
-  .card {
+  .video-card {
       width: 140px;
   }
   .mt-2 {
@@ -123,10 +123,9 @@
             <div class="row">
                 {% for video in video_list %}
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-12 mb-4 mt-4">
-                    <div class="video-card">
-                        <a href="{% url 'video' video.uuid %}" class="card">
-                            <img class="card-img-top video-thumbnail" src="{{ video.image.url }}"
-                                 alt="{{ video.title }}">
+                    <div class="card video-card">
+                        <a href="{% url 'video' video.uuid %}">
+                            <img class="card-img-top video-thumbnail" src="{{ video.image.url }}" alt="{{ video.title }}">
                             <video
                                     class="video-js video-player"
                                     preload="auto"
