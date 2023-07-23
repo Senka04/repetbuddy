@@ -1,5 +1,5 @@
 import uuid
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Video, TutorProfile, Course, UserProfile
 from .services import open_file, open_file_for_course
@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib import messages
 from .forms import VideoForm
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+
 
 def course_preview(request, pk: str):
     # Получаем отформатированный текст из базы данных
@@ -120,9 +121,13 @@ def search(request):
         rank = SearchRank(vector, query)
         obj = Course.objects.annotate(rank=rank, search=vector).filter(search=query).order_by('-rank')
     else:
-        obj = Course.objects.none()
-    params = {'obj': obj}
-    return render(request, 'page1/search.html', params)
+        obj = Course.objects.all().order_by('?')
+
+    print(obj)
+    results = [{'uuid': str(course.uuid), 'name': course.name, 'description': course.description,
+                'image_url': course.image.url if course.image else None} for course in obj]
+
+    return JsonResponse(results, safe=False)
 
 
 def gohome(request):

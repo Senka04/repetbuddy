@@ -31,12 +31,16 @@ repetbuddy.ru
     background-color: rgba(255, 182, 193, 0.5);
 }
 
+
+
 </style>
 <!--пространство между ссылочками наверху-->
 <style>
 .space {
     margin-right: 100px !important;
 }
+
+
 </style>
 <!--отображение карточек, webkit и scrollbar-width скрывают полосу прокрутки в разных браузерах-->
 <style>
@@ -75,6 +79,8 @@ repetbuddy.ru
     white-space: nowrap;
 }
 
+
+
 </style>
 
 {% endblock %}
@@ -92,44 +98,115 @@ repetbuddy.ru
 </div>
 <br>
 <br>
-<div class="container-fluid">
-    {% for card in cards %}
-    {% if forloop.counter0|divisibleby:5 %}
-    <div class="row">
-        {% endif %}
-        <div class="{% cycle 'col-sm-6' 'col-sm-6' 'col-sm-4' 'col-sm-4' 'col-sm-4' %}">
-            <a href="{% url 'course_preview' card.uuid %}" class="card card-link text-dark text-decoration-none {% if not card.image %}no-image{% endif %} mb-3 {% cycle 'pastel-1' 'pastel-2' 'pastel-3' 'pastel-4' 'pastel-5' 'pastel-6' %}">
-                {% if card.image %}
-                <img src="{{ card.image.url }}" class="card-img-top text-center my-3 rounded" alt="{{ card.name }}">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ card.name }}</h5>
-                    {% if card.description %}
-                    <p class="card-text">{{ card.description }}</p>
-                    {% endif %}
-                </div>
-            </a>
-        </div>
-        {% if forloop.counter|divisibleby:5 or forloop.last %}
-    </div>
-    {% endif %}
-    {% endfor %}
+<div id="cards-container" class="container-fluid">
 </div>
 
 {% endblock %}
 
 {% block scripts %}
+<!--Вывод всех курсов при обновлении страницы-->
 <script>
-let cardTexts = document.querySelectorAll('.card');
-
-for (let cardText of cardTexts) {
-    if (cardText.scrollHeight > cardText.clientHeight) {
-        let icon = document.createElement('i');
-        icon.className = 'fa-solid fa-arrows-up-down';
-        cardText.appendChild(icon);
+function loadCourses() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/search', true);
+    xhr.onload = function() {
+        if (this.status == 200) {
+            let results = JSON.parse(this.responseText);
+            let cardsContainer = document.querySelector('#cards-container');
+            cardsContainer.innerHTML = '';
+            let colClasses = ['col-sm-6', 'col-sm-6', 'col-sm-4', 'col-sm-4', 'col-sm-4'];
+            let pastelClasses = ['pastel-1', 'pastel-2', 'pastel-3', 'pastel-4', 'pastel-5', 'pastel-6'];
+            let row;
+            for (let i = 0; i < results.length; i++) {
+                if (i % 5 == 0) {
+                    row = document.createElement('div');
+                    row.className = 'row';
+                    cardsContainer.appendChild(row);
+                }
+                let result = results[i];
+                let colClass = colClasses[i % colClasses.length];
+                let pastelClass = pastelClasses[i % pastelClasses.length];
+                let cardImage = result.image_url ? `<img src="${result.image_url}" class="card-img-top text-center my-3 rounded" alt="${result.name}">` : '';
+                let card = `
+                    <div class="${colClass}">
+                        <a href="/course_preview/${result.uuid}" class="card card-link text-dark text-decoration-none mb-3 ${pastelClass}">
+                            ${cardImage}
+                            <div class="card-body">
+                                <h5 class="card-title">${result.name}</h5>
+                                <p class="card-text">${result.description}</p>
+                            </div>
+                        </a>
+                    </div>
+                `;
+                row.innerHTML += card;
+            }
+            let cardTexts = document.querySelectorAll('.card');
+            for (let cardText of cardTexts) {
+                if (cardText.scrollHeight > cardText.clientHeight) {
+                    let icon = document.createElement('i');
+                    icon.className = 'fa-solid fa-arrows-up-down';
+                    cardText.appendChild(icon);
+                }
+            }
+        }
     }
+    xhr.send();
 }
 
+window.addEventListener('load', loadCourses);
 </script>
+<!--Поиск + динамический вывод карточек-->
+<script>
+let searchForm = document.querySelector('.form-inline');
+searchForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    let searchInfo = document.querySelector('input[name="search_info"]').value;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/search?search_info=' + searchInfo, true);
+    xhr.onload = function() {
+        if (this.status == 200) {
+            let results = JSON.parse(this.responseText);
+            let cardsContainer = document.querySelector('#cards-container');
+            cardsContainer.innerHTML = '';
+            let colClasses = ['col-sm-6', 'col-sm-6', 'col-sm-4', 'col-sm-4', 'col-sm-4'];
+            let pastelClasses = ['pastel-1', 'pastel-2', 'pastel-3', 'pastel-4', 'pastel-5', 'pastel-6'];
+            let row = document.createElement('div');
+            row.className = 'row';
+            for (let i = 0; i < results.length; i++) {
+                if (i % 5 == 0) {
+                    row = document.createElement('div');
+                    row.className = 'row';
+                    cardsContainer.appendChild(row);
+                }
+                let result = results[i];
+                let colClass = colClasses[i % colClasses.length];
+                let pastelClass = pastelClasses[i % pastelClasses.length];
+                let cardImage = result.image_url ? `<img src="${result.image_url}" class="card-img-top text-center my-3 rounded" alt="${result.name}">` : '';
+                let card = `
+                    <div class="${colClass}">
+                        <a href="/course_preview/${result.uuid}" class="card card-link text-dark text-decoration-none mb-3 ${pastelClass}">
+                            ${cardImage}
+                            <div class="card-body">
+                                <h5 class="card-title">${result.name}</h5>
+                                <p class="card-text">${result.description}</p>
+                            </div>
+                        </a>
+                    </div>
+                `;
+                row.innerHTML += card;
+            }
+            let cardTexts = document.querySelectorAll('.card');
+            for (let cardText of cardTexts) {
+                if (cardText.scrollHeight > cardText.clientHeight) {
+                    let icon = document.createElement('i');
+                    icon.className = 'fa-solid fa-arrows-up-down';
+                    cardText.appendChild(icon);
+                }
+            }
+        }
+    }
+    xhr.send();
+});
 
+</script>
 {% endblock %}
