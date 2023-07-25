@@ -44,16 +44,12 @@
                     <label class="form-check-label" for="is_tutor">Я репетитор</label>
                 </div>
                 <div class="input-group mb-3 tutor-fields" style="display: none;">
-                    <input type="text" id="tag-input" class="form-control" placeholder="Введите теги">
+                    <input type="text" id="tag-input" class="form-control" placeholder="Введите предметы через enter">
                     <input type="hidden" id="discipline" name="discipline">
-                    <button id="add-tag-button" class="btn btn-primary" type="button">Добавить тег</button>
+                    <button id="add-tag-button" class="btn btn-primary" type="button">Добавить предмет</button>
                 </div>
                 <div id="tag-list"></div>
 
-                <div class="mb-3 tutor-fields" style="display: none;">
-                    <label class="source-sans-pro" for="hourly_rate">Почасовая ставка:</label>
-                    <input type="text" class="form-control" id="hourly_rate" name="hourly_rate">
-                </div>
                 <button type="submit" class="btn btn-primary">Готово</button>
                 <br>
                 <br>
@@ -80,6 +76,7 @@ $(document).ready(function() {
         $('.tutor-fields').toggle();
     });
 });
+
 </script>
 <!-- для тегов:-->
 <script>
@@ -150,6 +147,7 @@ $(document).ready(function() {
       removeTag(tags.length - 1);
     }
   });
+
 
 </script>
 {% endblock %}

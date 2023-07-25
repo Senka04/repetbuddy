@@ -87,18 +87,7 @@ repetbuddy.ru
 
 {% block content %}
 
-<div class="container-fluid d-flex justify-content-center">
-    <ul class="list-inline d-inline-block mb-0 text-nowrap">
-        <li class="list-inline-item space"><a href="/it-courses" class="text-dark link-footer">IT-курсы</a></li>
-        <li class="list-inline-item space"><a href="/marketing" class="text-dark link-footer">Маркетинг</a></li>
-        <li class="list-inline-item space"><a href="/design" class="text-dark link-footer">Дизайн</a></li>
-        <li class="list-inline-item space"><a href="/finance" class="text-dark link-footer">Финансы</a></li>
-        <li class="list-inline-item"><a href="/analytics" class="text-dark link-footer">Аналитика</a></li>
-    </ul>
-</div>
-<br>
-<br>
-<div id="cards-container" class="container-fluid">
+<div id="cards-container" class="container-fluid mt-4">
 </div>
 
 {% endblock %}
@@ -114,38 +103,49 @@ function loadCourses() {
             let results = JSON.parse(this.responseText);
             let cardsContainer = document.querySelector('#cards-container');
             cardsContainer.innerHTML = '';
-            let colClasses = ['col-sm-6', 'col-sm-6', 'col-sm-4', 'col-sm-4', 'col-sm-4'];
-            let pastelClasses = ['pastel-1', 'pastel-2', 'pastel-3', 'pastel-4', 'pastel-5', 'pastel-6'];
-            let row;
-            for (let i = 0; i < results.length; i++) {
-                if (i % 5 == 0) {
-                    row = document.createElement('div');
-                    row.className = 'row';
-                    cardsContainer.appendChild(row);
+            if (results.length === 0) {
+                // Если результатов нет, создаем div с сообщением "Не нашёл"
+                let notFoundDiv = document.createElement('div');
+                notFoundDiv.style.height = '300px';
+                notFoundDiv.style.display = 'flex';
+                notFoundDiv.style.alignItems = 'center';
+                notFoundDiv.style.justifyContent = 'center';
+                notFoundDiv.textContent = 'Не нашёл';
+                cardsContainer.appendChild(notFoundDiv);
+            } else {
+                let colClasses = ['col-sm-6', 'col-sm-6', 'col-sm-4', 'col-sm-4', 'col-sm-4'];
+                let pastelClasses = ['pastel-1', 'pastel-2', 'pastel-3', 'pastel-4', 'pastel-5', 'pastel-6'];
+                let row;
+                for (let i = 0; i < results.length; i++) {
+                    if (i % 5 == 0) {
+                        row = document.createElement('div');
+                        row.className = 'row';
+                        cardsContainer.appendChild(row);
+                    }
+                    let result = results[i];
+                    let colClass = colClasses[i % colClasses.length];
+                    let pastelClass = pastelClasses[i % pastelClasses.length];
+                    let cardImage = result.image_url ? `<img src="${result.image_url}" class="card-img-top text-center my-3 rounded" alt="${result.name}">` : '';
+                    let card = `
+                        <div class="${colClass}">
+                            <a href="/course_preview/${result.uuid}" class="card card-link text-dark text-decoration-none mb-3 ${pastelClass}">
+                                ${cardImage}
+                                <div class="card-body">
+                                    <h5 class="card-title">${result.name}</h5>
+                                    <p class="card-text">${result.description}</p>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                    row.innerHTML += card;
                 }
-                let result = results[i];
-                let colClass = colClasses[i % colClasses.length];
-                let pastelClass = pastelClasses[i % pastelClasses.length];
-                let cardImage = result.image_url ? `<img src="${result.image_url}" class="card-img-top text-center my-3 rounded" alt="${result.name}">` : '';
-                let card = `
-                    <div class="${colClass}">
-                        <a href="/course_preview/${result.uuid}" class="card card-link text-dark text-decoration-none mb-3 ${pastelClass}">
-                            ${cardImage}
-                            <div class="card-body">
-                                <h5 class="card-title">${result.name}</h5>
-                                <p class="card-text">${result.description}</p>
-                            </div>
-                        </a>
-                    </div>
-                `;
-                row.innerHTML += card;
-            }
-            let cardTexts = document.querySelectorAll('.card');
-            for (let cardText of cardTexts) {
-                if (cardText.scrollHeight > cardText.clientHeight) {
-                    let icon = document.createElement('i');
-                    icon.className = 'fa-solid fa-arrows-up-down';
-                    cardText.appendChild(icon);
+                let cardTexts = document.querySelectorAll('.card');
+                for (let cardText of cardTexts) {
+                    if (cardText.scrollHeight > cardText.clientHeight) {
+                        let icon = document.createElement('i');
+                        icon.className = 'fa-solid fa-arrows-up-down';
+                        cardText.appendChild(icon);
+                    }
                 }
             }
         }
@@ -168,39 +168,50 @@ searchForm.addEventListener('submit', function(event) {
             let results = JSON.parse(this.responseText);
             let cardsContainer = document.querySelector('#cards-container');
             cardsContainer.innerHTML = '';
-            let colClasses = ['col-sm-6', 'col-sm-6', 'col-sm-4', 'col-sm-4', 'col-sm-4'];
-            let pastelClasses = ['pastel-1', 'pastel-2', 'pastel-3', 'pastel-4', 'pastel-5', 'pastel-6'];
-            let row = document.createElement('div');
-            row.className = 'row';
-            for (let i = 0; i < results.length; i++) {
-                if (i % 5 == 0) {
-                    row = document.createElement('div');
-                    row.className = 'row';
-                    cardsContainer.appendChild(row);
+            if (results.length === 0) {
+                // Если результатов нет, создаем div с сообщением "Не нашёл"
+                let notFoundDiv = document.createElement('div');
+                notFoundDiv.style.height = '300px';
+                notFoundDiv.style.display = 'flex';
+                notFoundDiv.style.alignItems = 'center';
+                notFoundDiv.style.justifyContent = 'center';
+                notFoundDiv.textContent = 'Не нашёл';
+                cardsContainer.appendChild(notFoundDiv);
+            } else {
+                let colClasses = ['col-sm-6', 'col-sm-6', 'col-sm-4', 'col-sm-4', 'col-sm-4'];
+                let pastelClasses = ['pastel-1', 'pastel-2', 'pastel-3', 'pastel-4', 'pastel-5', 'pastel-6'];
+                let row = document.createElement('div');
+                row.className = 'row';
+                for (let i = 0; i < results.length; i++) {
+                    if (i % 5 == 0) {
+                        row = document.createElement('div');
+                        row.className = 'row';
+                        cardsContainer.appendChild(row);
+                    }
+                    let result = results[i];
+                    let colClass = colClasses[i % colClasses.length];
+                    let pastelClass = pastelClasses[i % pastelClasses.length];
+                    let cardImage = result.image_url ? `<img src="${result.image_url}" class="card-img-top text-center my-3 rounded" alt="${result.name}">` : '';
+                    let card = `
+                        <div class="${colClass}">
+                            <a href="/course_preview/${result.uuid}" class="card card-link text-dark text-decoration-none mb-3 ${pastelClass}">
+                                ${cardImage}
+                                <div class="card-body">
+                                    <h5 class="card-title">${result.name}</h5>
+                                    <p class="card-text">${result.description}</p>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                    row.innerHTML += card;
                 }
-                let result = results[i];
-                let colClass = colClasses[i % colClasses.length];
-                let pastelClass = pastelClasses[i % pastelClasses.length];
-                let cardImage = result.image_url ? `<img src="${result.image_url}" class="card-img-top text-center my-3 rounded" alt="${result.name}">` : '';
-                let card = `
-                    <div class="${colClass}">
-                        <a href="/course_preview/${result.uuid}" class="card card-link text-dark text-decoration-none mb-3 ${pastelClass}">
-                            ${cardImage}
-                            <div class="card-body">
-                                <h5 class="card-title">${result.name}</h5>
-                                <p class="card-text">${result.description}</p>
-                            </div>
-                        </a>
-                    </div>
-                `;
-                row.innerHTML += card;
-            }
-            let cardTexts = document.querySelectorAll('.card');
-            for (let cardText of cardTexts) {
-                if (cardText.scrollHeight > cardText.clientHeight) {
-                    let icon = document.createElement('i');
-                    icon.className = 'fa-solid fa-arrows-up-down';
-                    cardText.appendChild(icon);
+                let cardTexts = document.querySelectorAll('.card');
+                for (let cardText of cardTexts) {
+                    if (cardText.scrollHeight > cardText.clientHeight) {
+                        let icon = document.createElement('i');
+                        icon.className = 'fa-solid fa-arrows-up-down';
+                        cardText.appendChild(icon);
+                    }
                 }
             }
         }

@@ -47,6 +47,7 @@
 
 
 
+
 </style>
 {% endblock %}
 
@@ -57,7 +58,8 @@
             <h2>{{ course.name }}</h2>
         </div>
         <div class="{% if not course.file and not course.image %}col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12{% else %}d-none{% endif %} d-flex justify-content-end">
-            <a href="{% url 'tutor_info' course.author_id %}" type="button" class="btn btn-primary btn-lg" style="margin-right: 8px;">Другие
+            <a href="{% url 'tutor_info' course.author_id %}" type="button" class="btn btn-primary btn-lg"
+               style="margin-right: 8px;">Другие
                 курсы и видео репетитора</a>
             <a href="{% url 'course_read' course.uuid %}" type="button" class="btn btn-secondary btn-lg">Пройти курс</a>
         </div>
@@ -66,7 +68,10 @@
         {% if course.file or course.image %}
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <div class="card video-card">
+                {% if course.image %}
                 <img class="card-img-top video-thumbnail" src="{{ course.image.url }}">
+                {% endif %}
+                
                 {% if course.file %}
                 <video
                         class="video-js video-player"
@@ -117,6 +122,7 @@ videoCards.forEach(card => {
         video.play();
     });
 });
+
 
 
 

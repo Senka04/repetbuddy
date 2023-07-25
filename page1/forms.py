@@ -68,12 +68,10 @@ class RegistrationForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
     is_tutor = forms.BooleanField(required=False)
     discipline = forms.CharField(max_length=100, required=False)
-    hourly_rate = forms.DecimalField(max_digits=6, decimal_places=2, required=False)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2', 'is_tutor',
-                  'discipline', 'hourly_rate']
+        fields = ['username', 'email', 'password1', 'password2', 'is_tutor', 'discipline']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -105,12 +103,6 @@ class RegistrationForm(UserCreationForm):
         if not password2:
             self.add_error('password2', 'Пароли не совпадают.')
 
-        hourly_rate = self.cleaned_data.get('hourly_rate')
-        if hourly_rate is not None:
-            if not str(hourly_rate).isdigit():
-                self.add_error('hourly_rate', 'Почасовая ставка должна быть положительным целым числом.')
-        return cleaned_data
-
     def save(self, commit=True):
         user = super().save(commit=True)
         user.set_password(self.cleaned_data['password1'])
@@ -118,7 +110,6 @@ class RegistrationForm(UserCreationForm):
             tutor_profile = TutorProfile.objects.create(
                 user=user,
                 discipline=self.cleaned_data['discipline'].lower(),
-                hourly_rate=self.cleaned_data['hourly_rate'],
                 email=self.cleaned_data['email'].lower(),
                 username=self.cleaned_data['username'],
             )
@@ -135,3 +126,6 @@ class RegistrationForm(UserCreationForm):
             user.save()
 
         return user
+
+
+

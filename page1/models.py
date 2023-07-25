@@ -61,12 +61,12 @@ class UserProfile(models.Model):
     username = models.CharField(max_length=30, null=True)
     # Добавьте другие поля для профиля пользователя
 
+
 class TutorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email = models.EmailField(null=True)
     username = models.CharField(max_length=30, null=True)
     discipline = models.CharField(max_length=50)
-    hourly_rate = models.DecimalField(max_digits=6, decimal_places=2)
 
     @property
     def is_tutor(self):
